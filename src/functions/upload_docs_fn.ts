@@ -1,8 +1,10 @@
 import { GSContext, GSStatus, logger } from '@godspeedsystems/core';
 import { ingestUploadedFile } from '../helper/ingestGithubRepo';
-import { VectorStore } from '../helper/vectorStore';
+import { HybridVectorStore } from '../helper/hybridVectorStore';
 import { promises as fs } from 'fs';
 import path from 'path';
+import mammoth from 'mammoth';
+import { parse as htmlParse } from 'node-html-parser';
 
 const METADATA_PATH = path.join(__dirname, '../../data/docData.json');
 
@@ -60,6 +62,85 @@ export async function deleteFileMetadata(fileId: string): Promise<void> {
   }
 }
 
+/**
+ * Ingest uploaded file with database integration
+ */
+async function ingestUploadedFileToDatabase(
+  file: Buffer,
+  filename: string,
+  docUniqueId: string,
+  vs: HybridVectorStore,
+  metadata: any = {}
+): Promise<string> {
+  const ext = path.extname(filename).toLowerCase();
+  const buffer = file;
+
+  let content = '';
+
+  try {
+    switch (ext) {
+      case '.pdf':
+        // For PDF, you'd need to add pdf-parse dependency
+        content = buffer.toString('utf-8'); // Fallback for now
+        break;
+
+      case '.docx':
+        const result = await mammoth.extractRawText({ buffer });
+        content = result.value;
+        break;
+
+      case '.txt':
+      case '.md':
+        content = buffer.toString('utf-8');
+        break;
+
+      case '.html':
+        const root = htmlParse(buffer.toString('utf-8'));
+        content = root.text;
+        break;
+
+      case '.json':
+        const jsonContent = JSON.parse(buffer.toString('utf-8'));
+        content = JSON.stringify(jsonContent, null, 2);
+        break;
+
+      default:
+        content = buffer.toString('utf-8');
+        break;
+    }
+
+    if (!content.trim()) {
+      throw new Error('No extractable content found');
+    }
+
+    // Use hybrid vector store with database integration
+    await vs.upsert(docUniqueId, content, {
+      filename,
+      originalName: filename,
+      mimeType: getMimeType(ext),
+      size: buffer.length,
+      metadata
+    });
+
+    return `Successfully ingested ${filename} with ${content.length} characters`;
+  } catch (error) {
+    logger.error(`Error ingesting file ${filename}:`, error);
+    throw error;
+  }
+}
+
+function getMimeType(ext: string): string {
+  const mimeTypes: { [key: string]: string } = {
+    '.pdf': 'application/pdf',
+    '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    '.txt': 'text/plain',
+    '.md': 'text/markdown',
+    '.html': 'text/html',
+    '.json': 'application/json'
+  };
+  return mimeTypes[ext] || 'text/plain';
+}
+
 export default async function (ctx: GSContext): Promise<GSStatus> {
   const { files } = ctx.inputs.data.files;
   const { metadata } = ctx.inputs.data.body;
@@ -95,7 +176,7 @@ export default async function (ctx: GSContext): Promise<GSStatus> {
       });
     }
 
-    const vs = new VectorStore();
+    const vs = new HybridVectorStore(ctx);
     let existingMetadata: any[] = [];
     try {
       await fs.access(METADATA_PATH);
@@ -139,11 +220,12 @@ export default async function (ctx: GSContext): Promise<GSStatus> {
         uploadedAt: new Date().toISOString(),
       });
 
-      const res = await ingestUploadedFile(
+      const res = await ingestUploadedFileToDatabase(
         fileBuffer,
         fileName,
         docUniqueId,
         vs,
+        userMetadata
       );
 
       results.push({

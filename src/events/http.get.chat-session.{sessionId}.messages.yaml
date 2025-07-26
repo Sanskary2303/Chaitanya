@@ -1,0 +1,16 @@
+http.get./chat-session/{sessionId}/messages:
+  summary: Get chat history
+  description: Retrieve messages for a specific chat session
+  fn: db_get_chat_history
+  params:
+    - name: sessionId
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    200:
+      content:
+        application/json:
+          schema:
+            type: object

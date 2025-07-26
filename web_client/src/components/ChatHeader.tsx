@@ -1,5 +1,7 @@
 import React from "react";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Plus, Menu } from "lucide-react";
 import SystemPrompt from "./SystemPrompt";
 import UploadedItemsPanel from "./UploadedItemsPanel";
 import { UploadedFile, GitHubLink } from "../types/chat";
@@ -13,6 +15,9 @@ interface ChatHeaderProps {
   onDeleteFile: (fileId: string) => void;
   onDeleteGithubLink: (linkId: string) => void;
   onSyncGithubLink: (linkId: string) => void;
+  onNewChat?: () => void;
+  onToggleSidebar?: () => void;
+  isSidebarCollapsed?: boolean;
 }
 
 const ChatHeader: React.FC<ChatHeaderProps> = ({
@@ -24,6 +29,9 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
   onDeleteFile,
   onDeleteGithubLink,
   onSyncGithubLink,
+  onNewChat,
+  onToggleSidebar,
+  isSidebarCollapsed = false,
 }) => {
   const getStatusColor = () => {
     switch (connectionStatus) {
@@ -54,6 +62,16 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
   return (
     <div className="h-14 sm:h-16 border-b border-gray-200 px-3 sm:px-6 flex items-center justify-between bg-gradient-to-r from-blue-50 to-purple-50 sticky top-0 py-4 z-10">
       <div className="flex items-center space-x-2 sm:space-x-4 flex-1 min-w-0">
+        {isSidebarCollapsed && onToggleSidebar && (
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onToggleSidebar}
+            className="text-gray-600 hover:text-gray-900 shrink-0"
+          >
+            <Menu className="h-5 w-5" />
+          </Button>
+        )}
         <h1 className="text-lg sm:text-xl font-semibold text-gray-900 truncate">
           AI Chat Assistant
         </h1>
@@ -73,6 +91,40 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
         </Badge>
       </div>
       <div className="flex items-center space-x-2">
+        {/* Test buttons for debugging - remove in production */}
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => {
+            const testSessionId = 'cmdczwrk10001m6a8nsu8g7cj';
+            console.log('Loading test session:', testSessionId);
+            (window as any).testLoadHistory && (window as any).testLoadHistory();
+          }}
+          className="hidden sm:flex items-center space-x-2 bg-yellow-50"
+        >
+          <span>Load Test History</span>
+        </Button>
+        {onNewChat && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onNewChat}
+            className="hidden sm:flex items-center space-x-2"
+          >
+            <Plus className="w-4 h-4" />
+            <span>New Chat</span>
+          </Button>
+        )}
+        {onNewChat && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onNewChat}
+            className="sm:hidden"
+          >
+            <Plus className="w-4 h-4" />
+          </Button>
+        )}
         <UploadedItemsPanel
           uploadedFiles={uploadedFiles}
           githubLinks={githubLinks}

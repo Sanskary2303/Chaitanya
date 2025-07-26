@@ -1,0 +1,42 @@
+http.post./chat-session:
+  summary: Create a new chat session
+  description: Create a new chat session for the user
+  fn: db_create_chat_session
+  body:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            userId:
+              type: string
+            title:
+              type: string
+  responses:
+    201:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              code:
+                type: number
+              message:
+                type: string
+              data:
+                type: object
+    500:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              code:
+                type: number
+              message:
+                type: string

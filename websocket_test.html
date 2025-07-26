@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .status { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .connected { background: #d4edda; color: #155724; }
+        .disconnected { background: #f8d7da; color: #721c24; }
+        .messages { border: 1px solid #ccc; padding: 10px; height: 300px; overflow-y: auto; }
+        input[type="text"] { width: 70%; padding: 5px; }
+        button { padding: 5px 10px; }
+    </style>
+</head>
+<body>
+    <h1>WebSocket Test</h1>
+    <div id="status" class="status disconnected">Disconnected</div>
+    
+    <div>
+        <input type="text" id="messageInput" placeholder="Enter message..." value="Hello from test page">
+        <button onclick="sendMessage()">Send</button>
+        <button onclick="connect()">Connect</button>
+        <button onclick="disconnect()">Disconnect</button>
+    </div>
+    
+    <h3>Messages:</h3>
+    <div id="messages" class="messages"></div>
+
+    <script>
+        let ws = null;
+        let sessionId = 'test-session-' + Date.now();
+        
+        function updateStatus(connected, message) {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.className = 'status ' + (connected ? 'connected' : 'disconnected');
+        }
+        
+        function addMessage(message, type = 'info') {
+            const messages = document.getElementById('messages');
+            const div = document.createElement('div');
+            div.textContent = `[${new Date().toLocaleTimeString()}] ${type.toUpperCase()}: ${message}`;
+            div.style.color = type === 'error' ? 'red' : type === 'sent' ? 'blue' : 'green';
+            messages.appendChild(div);
+            messages.scrollTop = messages.scrollHeight;
+        }
+        
+        function connect() {
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                addMessage('Already connected', 'info');
+                return;
+            }
+            
+            const wsUrl = 'ws://localhost:8000?clientId=web-test-' + Date.now();
+            addMessage('Connecting to: ' + wsUrl, 'info');
+            
+            ws = new WebSocket(wsUrl);
+            
+            ws.onopen = function() {
+                updateStatus(true, 'Connected');
+                addMessage('WebSocket connected successfully', 'info');
+            };
+            
+            ws.onmessage = function(event) {
+                try {
+                    const data = JSON.parse(event.data);
+                    addMessage(`Received: ${JSON.stringify(data)}`, 'received');
+                } catch (e) {
+                    addMessage(`Received (raw): ${event.data}`, 'received');
+                }
+            };
+            
+            ws.onclose = function(event) {
+                updateStatus(false, `Disconnected (Code: ${event.code}, Reason: ${event.reason})`);
+                addMessage(`WebSocket closed: ${event.code} - ${event.reason}`, 'error');
+            };
+            
+            ws.onerror = function(error) {
+                addMessage('WebSocket error: ' + error, 'error');
+            };
+        }
+        
+        function disconnect() {
+            if (ws) {
+                ws.close();
+            }
+        }
+        
+        function sendMessage() {
+            if (!ws || ws.readyState !== WebSocket.OPEN) {
+                addMessage('WebSocket not connected!', 'error');
+                return;
+            }
+            
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            if (!message) return;
+            
+            const payload = {
+                eventtype: 'websocket.stream',
+                payload: {
+                    message: message,
+                    sessionId: sessionId
+                }
+            };
+            
+            addMessage(`Sending: ${JSON.stringify(payload)}`, 'sent');
+            ws.send(JSON.stringify(payload));
+        }
+        
+        // Auto connect when page loads
+        window.onload = function() {
+            connect();
+        };
+        
+        // Allow Enter key to send message
+        document.getElementById('messageInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>

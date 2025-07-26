@@ -1,0 +1,155 @@
+// This is your Prisma schema file for RAG Chatbot
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  output          = "./prisma-clients/chatbot"
+  previewFeatures = ["metrics"]
+}
+
+datasource db {
+  provider = "postgresql" // Change this to "mysql", "sqlite", etc. based on your database
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  avatar    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  chatSessions ChatSession[]
+  documents    Document[]
+  repositories GitHubRepository[]
+
+  @@map("users")
+}
+
+model ChatSession {
+  id        String   @id @default(cuid())
+  userId    String?
+  title     String?
+  isActive  Boolean  @default(true)
+  metadata  Json? // Store additional session data
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  user     User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  messages Message[]
+
+  @@map("chat_sessions")
+}
+
+model Message {
+  id        String      @id @default(cuid())
+  sessionId String
+  role      MessageRole
+  content   String      @db.Text
+  metadata  Json? // Store tokens, model used, processing time, etc.
+  createdAt DateTime    @default(now())
+
+  // Relations
+  session ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId])
+  @@map("messages")
+}
+
+model Document {
+  id            String    @id @default(cuid())
+  userId        String?
+  filename      String
+  originalName  String
+  mimeType      String
+  size          Int
+  content       String?   @db.Text
+  extractedText String?   @db.Text
+  metadata      Json? // Store file metadata, tags, processing info
+  status        DocStatus @default(PROCESSING)
+  uploadPath    String? // File storage path
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  user         User?         @relation(fields: [userId], references: [id], onDelete: SetNull)
+  vectorChunks VectorChunk[]
+
+  @@map("documents")
+}
+
+model GitHubRepository {
+  id         String     @id @default(cuid())
+  userId     String?
+  repoUrl    String
+  repoName   String
+  branch     String     @default("main")
+  lastSyncAt DateTime?
+  status     RepoStatus @default(PENDING)
+  metadata   Json? // Store repo metadata, file counts, etc.
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+
+  // Relations
+  user         User?         @relation(fields: [userId], references: [id], onDelete: SetNull)
+  vectorChunks VectorChunk[]
+
+  @@unique([repoUrl, branch])
+  @@map("github_repositories")
+}
+
+model VectorChunk {
+  id         String   @id @default(cuid())
+  docId      String? // Reference to Document
+  repoId     String? // Reference to GitHubRepository
+  chunkIndex Int
+  content    String   @db.Text
+  embedding  String?  @db.Text // Store embedding as JSON string or use vector extension
+  metadata   Json? // Store chunk metadata, file path, etc.
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // Relations (one of these will be set)
+  document   Document?         @relation(fields: [docId], references: [id], onDelete: Cascade)
+  repository GitHubRepository? @relation(fields: [repoId], references: [id], onDelete: Cascade)
+
+  @@unique([docId, chunkIndex])
+  @@unique([repoId, chunkIndex])
+  @@index([docId])
+  @@index([repoId])
+  @@map("vector_chunks")
+}
+
+model SystemPrompt {
+  id        String   @id @default(cuid())
+  content   String   @db.Text
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("system_prompts")
+}
+
+// Enums
+enum MessageRole {
+  USER
+  ASSISTANT
+  SYSTEM
+}
+
+enum DocStatus {
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+enum RepoStatus {
+  PENDING
+  CLONING
+  PROCESSING
+  COMPLETED
+  FAILED
+}

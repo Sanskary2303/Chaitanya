@@ -1,3 +1,7 @@
+// Load environment variables first
+import dotenv from 'dotenv';
+dotenv.config();
+
 try {
   if (process.env.OTEL_ENABLED == 'true') {
     require('@godspeedsystems/tracing').initialize();

@@ -1,0 +1,29 @@
+http.post./message:
+  summary: Save a message
+  description: Save a user or AI message to a chat session
+  fn: db_save_message
+  body:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            sessionId:
+              type: string
+            role:
+              type: string
+              enum: [USER, ASSISTANT, SYSTEM]
+            content:
+              type: string
+            metadata:
+              type: object
+          required:
+            - sessionId
+            - role
+            - content
+  responses:
+    201:
+      content:
+        application/json:
+          schema:
+            type: object

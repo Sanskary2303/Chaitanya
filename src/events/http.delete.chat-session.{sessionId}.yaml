@@ -1,0 +1,28 @@
+http.delete./chat-session/{sessionId}:
+  summary: Delete a chat session
+  description: Delete a specific chat session and all its messages
+  operationId: deleteChatSession
+  fn: db_delete_chat_session
+  requestSchema:
+    type: object
+    properties:
+      params:
+        type: object
+        properties:
+          sessionId:
+            type: string
+        required:
+          - sessionId
+  responses:
+    200:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object

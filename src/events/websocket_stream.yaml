@@ -15,4 +15,6 @@ websocket.stream:
         properties:
           message:
             type: string
+          sessionId:
+            type: [string, "null"]
 

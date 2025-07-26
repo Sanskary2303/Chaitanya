@@ -1,0 +1,11 @@
+http.get./chat-sessions:
+  summary: Get all chat sessions
+  description: Retrieve all chat sessions
+  operationId: getChatSessions
+  fn: db_get_chat_sessions
+  responses:
+    200:
+      content:
+        application/json:
+          schema:
+            type: object

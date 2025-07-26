@@ -1,3 +1,6 @@
+id: validations.request.standardResponseyml
+summary: Standard response validation error handler
+description: Handles request validation errors with standardized response format
 tasks:
   - id: validation_error
     description: |

@@ -1,4 +1,4 @@
-import { GSContext, GSStatus } from '@godspeedsystems/core';
+import { GSContext, GSStatus, GSDataSource } from '@godspeedsystems/core';
 import { ChatGoogleGenerativeAI } from '@langchain/google-genai';
 import { StateGraph, END, MemorySaver, Annotation } from '@langchain/langgraph';
 import { ToolNode } from '@langchain/langgraph/prebuilt';
@@ -12,10 +12,97 @@ import { memorySaver } from '../helper/memory';
 
 export default async function stream_gemini(ctx: GSContext): Promise<GSStatus> {
   const { ws, clientId, payload } = ctx.inputs.data;
+  const prisma: GSDataSource = ctx.datasources.chatbot;
 
+  // Add debug logging to see what we're receiving
   if (!ws || ws.readyState !== ws.OPEN) {
     ctx.logger.error(`WebSocket not connected: ${clientId}`);
     return new GSStatus(false, 400, 'WebSocket disconnected');
+  }
+
+  // Create or get chat session
+  let sessionId = payload.sessionId;
+  
+  if (!sessionId) {
+    // Create new session when sessionId is null
+    try {
+      const session = await prisma.execute(ctx, {
+        meta: {
+          entityType: 'ChatSession',
+          method: 'create'
+        },
+        data: {
+          title: 'New Chat Session',
+          metadata: { clientId }
+        }
+      });
+      sessionId = session.data.id;
+      ctx.logger.info(`Created new session: ${sessionId}`);
+    } catch (error) {
+      ctx.logger.error('Failed to create session:', error);
+      // Don't save messages if we can't create a session
+      ws.send(JSON.stringify({
+        eventtype: 'error',
+        payload: { message: 'Failed to create chat session' }
+      }));
+      return new GSStatus(false, 500, 'Failed to create chat session');
+    }
+  } else {
+    // Verify existing session exists
+    try {
+      const existingSession = await prisma.execute(ctx, {
+        meta: {
+          entityType: 'ChatSession',
+          method: 'findUnique'
+        },
+        where: { id: sessionId }
+      });
+      
+      if (!existingSession.data) {
+        ctx.logger.error(`Session ${sessionId} not found, creating new one`);
+        const session = await prisma.execute(ctx, {
+          meta: {
+            entityType: 'ChatSession',
+            method: 'create'
+          },
+          data: {
+            title: 'New Chat Session',
+            metadata: { clientId }
+          }
+        });
+        sessionId = session.data.id;
+        ctx.logger.info(`Created replacement session: ${sessionId}`);
+      }
+    } catch (error) {
+      ctx.logger.error('Error checking/creating session:', error);
+      // Don't save messages if we can't verify/create session
+      ws.send(JSON.stringify({
+        eventtype: 'error',
+        payload: { message: 'Session error' }
+      }));
+      return new GSStatus(false, 500, 'Session error');
+    }
+  }
+
+  // Save user message
+  try {
+    const userMessage = await prisma.execute(ctx, {
+      meta: {
+        entityType: 'Message',
+        method: 'create'
+      },
+      data: {
+        sessionId,
+        role: 'USER',
+        content: payload.message,
+        metadata: { timestamp: new Date().toISOString() }
+      }
+    });
+    ctx.logger.info(`Saved user message: ${userMessage.data.id}`);
+  } catch (error) {
+    ctx.logger.error('Failed to save user message:', error);
+    ctx.logger.error('SessionId was:', sessionId);
+    // Continue processing even if message save fails
   }
 
   // STEP 1: Load VectorStore + Create RAG Tool
@@ -77,12 +164,17 @@ export default async function stream_gemini(ctx: GSContext): Promise<GSStatus> {
 
     const { messages, systemPrompt } = state;
 
+    // Debug: Check if Google API key is available
+    const apiKey = process.env.GOOGLE_API_KEY;
+    ctx.logger.info(`Google API Key available: ${apiKey ? 'YES' : 'NO'}, Length: ${apiKey?.length || 0}`);
+
     // Construct messages with system prompt at the beginning
     const allMessages: BaseMessage[] = systemPrompt ? 
       [new SystemMessage(systemPrompt), ...messages] : 
       messages;
 
     const llm = new ChatGoogleGenerativeAI({
+      apiKey: process.env.GOOGLE_API_KEY, // Explicitly pass the API key
       model: process.env.GEMINI_MODEL || 'gemini-2.0-flash',
       temperature: 0.7,
       streaming: true,
@@ -147,6 +239,7 @@ export default async function stream_gemini(ctx: GSContext): Promise<GSStatus> {
 
   try {
     let streamStarted = false;
+    let aiResponse = ''; // Collect the full AI response
     
     // Get the current system prompt (either updated or existing)
     const currentSystemPrompt = systemPromptForStream ?? existingSystemPrompt;
@@ -171,48 +264,45 @@ export default async function stream_gemini(ctx: GSContext): Promise<GSStatus> {
         },
         callbacks: [
           {
-            handleToolStart: async (tool, input) => {
-              ws.send(
-                JSON.stringify({
-                  eventtype: 'stream.start',
-                  payload: { message: '[STREAM_START]' },
-                }),
-              );
-              ws.send(
-                JSON.stringify({
-                  eventtype: 'stream.chunk',
-                  payload: {
-                    message: 'Please wait...Retreving relevant documents.',
-                  },
-                }),
-              );
-              ws.send(
-                JSON.stringify({
-                  eventtype: 'stream.end',
-                  payload: { message: '[STREAM_END]' },
-                }),
-              );
-            },
             handleLLMStart: async () => {
               if (!streamStarted) {
-                streamStarted = true;
                 ws.send(
                   JSON.stringify({
                     eventtype: 'stream.start',
                     payload: { message: '[STREAM_START]' },
                   }),
                 );
+                streamStarted = true;
+              }
+            },
+            handleToolStart: async (tool, input) => {
+              if (!streamStarted) {
+                ws.send(
+                  JSON.stringify({
+                    eventtype: 'stream.start',
+                    payload: { message: '[STREAM_START]' },
+                  }),
+                );
+                streamStarted = true;
               }
             },
             handleLLMNewToken: async (token) => {
-              if (token.length > 0) {
+              if (!streamStarted) {
                 ws.send(
                   JSON.stringify({
-                    eventtype: 'stream.chunk',
-                    payload: { message: token },
+                    eventtype: 'stream.start',
+                    payload: { message: '[STREAM_START]' },
                   }),
                 );
+                streamStarted = true;
               }
+              aiResponse += token; // Collect response
+              ws.send(
+                JSON.stringify({
+                  eventtype: 'stream.chunk',
+                  payload: { message: token },
+                }),
+              );
             },
             handleLLMEnd: async () => {
               ws.send(
@@ -222,6 +312,30 @@ export default async function stream_gemini(ctx: GSContext): Promise<GSStatus> {
                 }),
               );
               streamStarted = false;
+              
+              // Save AI response to database
+              try {
+                const aiMessage = await prisma.execute(ctx, {
+                  meta: {
+                    entityType: 'Message',
+                    method: 'create'
+                  },
+                  data: {
+                    sessionId,
+                    role: 'ASSISTANT',
+                    content: aiResponse,
+                    metadata: { 
+                      timestamp: new Date().toISOString(),
+                      model: 'gemini-2.0-flash',
+                      threadId: threadId
+                    }
+                  }
+                });
+                ctx.logger.info(`Saved AI message: ${aiMessage.data.id}`);
+              } catch (error) {
+                ctx.logger.error('Failed to save AI message:', error);
+                ctx.logger.error('SessionId was:', sessionId);
+              }
             },
           },
         ],
