@@ -15,9 +15,13 @@ try {
 }
 
 import Godspeed from '@godspeedsystems/core';
+import { initializeAuth } from './helper/auth';
 
 // create a godspeed
 const gsApp = new Godspeed();
+
+// Initialize authentication system
+initializeAuth(gsApp.config);
 
 // initilize the Godspeed App
 // this is responsible to load all kind of entities

@@ -309,10 +309,25 @@ export class VectorStore {
         this.save();
     }
 
-  async search(query: string, k = 5): Promise<any[]> {
+  async search(query: string, k = 3): Promise<any[]> {
         const queryVec = await this.model.embedQuery(query);
         const queryArray = queryVec;
-        const result = this.index.search(queryArray, k);
+        
+        // Get the actual number of vectors in the index
+        const totalVectors = this.index.ntotal();
+        
+        // Limit k to the number of available vectors to prevent FAISS error
+        const effectiveK = Math.min(k, totalVectors);
+        
+        // If no vectors in index, return empty array
+        if (effectiveK === 0) {
+            console.warn('No vectors in index, returning empty search results');
+            return [];
+        }
+        
+        console.log(`Searching ${totalVectors} vectors with k=${effectiveK} (requested k=${k})`);
+        
+        const result = this.index.search(queryArray, effectiveK);
         const hits = [];
         for (let i = 0; i < result.labels.length; i++) {
             const idx = result.labels[i];

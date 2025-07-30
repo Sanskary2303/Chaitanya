@@ -1,0 +1,25 @@
+"mcp.write-file":
+  fn: mcp_write_file
+  type: tool
+  summary: Write file contents
+  description: Write content to a file within the project directory with security checks.
+  body:
+    type: object
+    required:
+      - filePath
+      - content
+    properties:
+      filePath:
+        type: string
+        description: Path to the file to write (relative to project root)
+      content:
+        type: string
+        description: Content to write to the file
+      encoding:
+        type: string
+        description: "File encoding (default: utf8)"
+        default: utf8
+      createDirs:
+        type: boolean
+        description: "Create parent directories if they don't exist"
+        default: false

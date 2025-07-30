@@ -1,0 +1,17 @@
+"mcp.read-file":
+  fn: mcp_read_file
+  type: tool
+  summary: Read file contents
+  description: Read the contents of a file within the project directory with security checks.
+  body:
+    type: object
+    required:
+      - filePath
+    properties:
+      filePath:
+        type: string
+        description: Path to the file to read (relative to project root)
+      encoding:
+        type: string
+        description: "File encoding (default: utf8)"
+        default: utf8

@@ -1,4 +1,5 @@
-import { GSContext, GSStatus, logger } from '@godspeedsystems/core';
+import { GSContext, GSStatus } from '@godspeedsystems/core';
+import { requireAuth } from '../helper/auth';
 import { ingestUploadedFile } from '../helper/ingestGithubRepo';
 import { HybridVectorStore } from '../helper/hybridVectorStore';
 import { promises as fs } from 'fs';
@@ -142,6 +143,12 @@ function getMimeType(ext: string): string {
 }
 
 export default async function (ctx: GSContext): Promise<GSStatus> {
+  // Check authentication first
+  const authResult = requireAuth(ctx);
+  if (authResult) {
+    return authResult;
+  }
+
   const { files } = ctx.inputs.data.files;
   const { metadata } = ctx.inputs.data.body;
 

@@ -47,12 +47,18 @@ importers:
       '@swc/core':
         specifier: ^1.11.24
         version: 1.11.29
+      '@types/bcryptjs':
+        specifier: ^3.0.0
+        version: 3.0.0
       '@types/config':
         specifier: ^3.3.5
         version: 3.3.5
       '@types/fs-extra':
         specifier: ^11.0.4
         version: 11.0.4
+      '@types/jsonwebtoken':
+        specifier: ^9.0.10
+        version: 9.0.10
       '@types/node':
         specifier: ^22.15.19
         version: 22.15.21
@@ -71,6 +77,9 @@ importers:
       axios:
         specifier: ^1.9.0
         version: 1.9.0(debug@4.4.1)
+      bcryptjs:
+        specifier: ^3.0.2
+        version: 3.0.2
       busboy:
         specifier: ^1.6.0
         version: 1.6.0
@@ -89,6 +98,9 @@ importers:
       fs-extra:
         specifier: ^11.3.0
         version: 11.3.0
+      jsonwebtoken:
+        specifier: ^9.0.2
+        version: 9.0.2
       langchain:
         specifier: ^0.3.27
         version: 0.3.27(@langchain/core@0.3.61(openai@5.1.1(ws@8.18.2)(zod@3.25.56)))(@langchain/google-genai@0.2.10(@langchain/core@0.3.61(openai@5.1.1(ws@8.18.2)(zod@3.25.56)))(zod@3.25.56))(axios@1.9.0(debug@4.4.1))(openai@5.1.1(ws@8.18.2)(zod@3.25.56))(ws@8.18.2)
@@ -929,6 +941,10 @@ packages:
   '@types/babel__traverse@7.20.7':
     resolution: {integrity: sha512-dkO5fhS7+/oos4ciWxyEyjWe48zmG6wbCheo/G2ZnHx4fs3EU6YC6UM8rk56gAjNJ9P3MTH2jo5jb92/K6wbng==}
 
+  '@types/bcryptjs@3.0.0':
+    resolution: {integrity: sha512-WRZOuCuaz8UcZZE4R5HXTco2goQSI2XxjGY3hbM/xDvwmqFWd4ivooImsMx65OKM6CtNKbnZ5YL+YwAwK7c1dg==}
+    deprecated: This is a stub types definition. bcryptjs provides its own type definitions, so you do not need this installed.
+
   '@types/busboy@1.5.4':
     resolution: {integrity: sha512-kG7WrUuAKK0NoyxfQHsVE6j1m01s6kMma64E+OZenQABMQyTJop1DumUWcLwAQ2JzpefU7PDYoRDKl8uZosFjw==}
 
@@ -964,6 +980,9 @@ packages:
 
   '@types/jsonfile@6.1.4':
     resolution: {integrity: sha512-D5qGUYwjvnNNextdU59/+fI+spnwtTFmyQP0h+PfIOSkNfpU6AOICUOkm4i0OnSk+NyjdPJrxCDro0sJsWlRpQ==}
+
+  '@types/jsonwebtoken@9.0.10':
+    resolution: {integrity: sha512-asx5hIG9Qmf/1oStypjanR7iKTv0gXQ1Ov/jfrX6kS/EO0OFni8orbmGCn0672NHR3kXHwpAwR+B368ZGN/2rA==}
 
   '@types/ms@2.1.0':
     resolution: {integrity: sha512-GsCCIZDE/p3i96vtEqx+7dBUGXrc7zeSK3wwPHIaRThS+9OhWIXRqzs4d6k1SVU8g91DrNRWxWUGhp5KXQb2VA==}
@@ -1297,6 +1316,10 @@ packages:
   base64url@3.0.1:
     resolution: {integrity: sha512-ir1UPr3dkwexU7FdV8qBBbNDRUhMmIekYMFZfi+C/sLNnRESKPl23nB9b2pltqfOQNnGzsDdId90AEtG5tCx4A==}
     engines: {node: '>=6.0.0'}
+
+  bcryptjs@3.0.2:
+    resolution: {integrity: sha512-k38b3XOZKv60C4E2hVsXTolJWfkGRMbILBIe2IBITXciy5bOsTKot5kDrf3ZfufQtQOUN5mXceUEpU1rTl9Uog==}
+    hasBin: true
 
   bin-version-check@5.1.0:
     resolution: {integrity: sha512-bYsvMqJ8yNGILLz1KP9zKLzQ6YpljV3ln1gqhuLkUtyfGi3qXKGuK2p+U4NAvjVFzDFiBBtOpCOSFNuYYEGZ5g==}
@@ -5230,6 +5253,10 @@ snapshots:
     dependencies:
       '@babel/types': 7.28.1
 
+  '@types/bcryptjs@3.0.0':
+    dependencies:
+      bcryptjs: 3.0.2
+
   '@types/busboy@1.5.4':
     dependencies:
       '@types/node': 22.15.21
@@ -5270,6 +5297,11 @@ snapshots:
 
   '@types/jsonfile@6.1.4':
     dependencies:
+      '@types/node': 22.15.21
+
+  '@types/jsonwebtoken@9.0.10':
+    dependencies:
+      '@types/ms': 2.1.0
       '@types/node': 22.15.21
 
   '@types/ms@2.1.0': {}
@@ -5615,6 +5647,8 @@ snapshots:
   base64-js@1.5.1: {}
 
   base64url@3.0.1: {}
+
+  bcryptjs@3.0.2: {}
 
   bin-version-check@5.1.0:
     dependencies:

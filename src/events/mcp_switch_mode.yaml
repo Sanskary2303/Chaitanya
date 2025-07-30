@@ -1,0 +1,17 @@
+"mcp.switch-mode":
+  fn: mcp_switch_mode
+  type: tool
+  summary: Switch operation mode
+  description: Switch between different operation modes (rag, chat, analysis, development, debug).
+  body:
+    type: object
+    required:
+      - mode
+    properties:
+      mode:
+        type: string
+        description: Mode to switch to
+        enum: ["rag", "chat", "analysis", "development", "debug"]
+      config:
+        type: object
+        description: Additional configuration for the mode

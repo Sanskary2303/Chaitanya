@@ -1,0 +1,23 @@
+"mcp.execute-command":
+  fn: mcp_execute_command
+  type: tool
+  summary: Execute shell command
+  description: Execute a shell command with output capture and security restrictions.
+  body:
+    type: object
+    required:
+      - command
+    properties:
+      command:
+        type: string
+        description: Shell command to execute
+      timeout:
+        type: number
+        description: "Command timeout in milliseconds (default: 30000)"
+        default: 30000
+      cwd:
+        type: string
+        description: Working directory for command execution
+      env:
+        type: object
+        description: Environment variables for command execution

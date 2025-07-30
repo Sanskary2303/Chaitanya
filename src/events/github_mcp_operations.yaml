@@ -1,0 +1,86 @@
+http.post./github-mcp:
+  summary: GitHub MCP operations via enhanced chatbot
+  description: |
+    Enhanced chatbot interface that supports GitHub operations through MCP.
+    Supports repository management, issues, pull requests, file operations, and more.
+  fn: enhanced_mcp_chatbot
+  params:
+    - name: query
+      in: body
+      required: true
+      schema:
+        type: string
+        description: Natural language query for GitHub operations
+        examples:
+          - "list my repositories"
+          - "create repository test-repo private"
+          - "get repository owner/repo-name"
+          - "list issues in owner/repo"
+          - "create issue title \"Bug report\" body \"Found a bug\""
+          - "list pull requests in owner/repo"
+          - "get file package.json from owner/repo"
+          - "list commits in owner/repo"
+          - "list branches in owner/repo"
+          - "get user information for username"
+          - "search repositories for \"machine learning\""
+    - name: enableFileOperations
+      in: body
+      required: false
+      schema:
+        type: boolean
+        default: true
+        description: Enable local file operations
+    - name: enableExternalMCP
+      in: body
+      required: false
+      schema:
+        type: boolean
+        default: true
+        description: Enable external MCP server calls (including GitHub)
+    - name: debug
+      in: body
+      required: false
+      schema:
+        type: boolean
+        default: false
+        description: Enable debug mode for detailed logging
+    - name: maxOutputLength
+      in: body
+      required: false
+      schema:
+        type: number
+        default: 10000
+        description: Maximum length of output response
+  responses:
+    200:
+      description: GitHub operation completed successfully
+      schema:
+        type: object
+        properties:
+          context:
+            type: string
+            description: Formatted results for display
+          source_files:
+            type: string
+            description: Source of the tool execution
+          tool_results:
+            type: array
+            description: Detailed results from tool execution
+          processed_with_tools:
+            type: boolean
+            description: Whether tools were used
+          mode:
+            type: string
+            description: Processing mode used
+          toolsUsed:
+            type: array
+            description: List of tools that were executed
+          timestamp:
+            type: string
+            description: ISO timestamp of execution
+    400:
+      description: Invalid request parameters
+    401:
+      description: GitHub token not configured
+    500:
+      description: Internal server error

@@ -1,0 +1,20 @@
+"mcp.list-directory":
+  fn: mcp_list_directory
+  type: tool
+  summary: List directory contents
+  description: List files and directories within the project directory with optional recursion.
+  body:
+    type: object
+    properties:
+      dirPath:
+        type: string
+        description: "Directory path to list (default: current directory)"
+        default: "."
+      includeHidden:
+        type: boolean
+        description: Include hidden files and directories
+        default: false
+      recursive:
+        type: boolean
+        description: List contents recursively
+        default: false

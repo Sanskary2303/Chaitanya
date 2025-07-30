@@ -10,6 +10,7 @@ import {
 import crypto from 'crypto';
 import { EventEmitter } from 'events';
 import { z, ZodSchema, ZodRawShape } from 'zod';
+import { verifyToken } from '../../helper/auth';
 
 interface ExtendedWebSocket extends WebSocket {
   clientId?: string;
@@ -29,11 +30,34 @@ export default class WebSocketEventSource extends GSEventSource {
 
     this.wss.on('connection', (ws: ExtendedWebSocket, req) => {
       const url = new URL(req.url || '', `http://${req.headers.host}`);
-      ws.clientId =
-        url.searchParams.get('clientId') || `anon-${crypto.randomUUID()}`;
-      ws.context = { connectedAt: Date.now(), messagesReceived: 0 };
-
-      logger.info(`Client connected: ${ws.clientId}`);
+      
+      // Check for JWT authentication
+      const token = url.searchParams.get('token');
+      if (token) {
+        const decoded = verifyToken(token, this.config);
+        if (decoded) {
+          ws.context = { 
+            connectedAt: Date.now(), 
+            messagesReceived: 0,
+            user: decoded,
+            authenticated: true
+          };
+          ws.clientId = `user-${decoded.username}-${crypto.randomUUID()}`;
+          logger.info(`Authenticated client connected: ${ws.clientId} (${decoded.username})`);
+        } else {
+          logger.warn('Client attempted connection with invalid token');
+          ws.close(1008, 'Invalid authentication token');
+          return;
+        }
+      } else {
+        ws.context = { 
+          connectedAt: Date.now(), 
+          messagesReceived: 0,
+          authenticated: false
+        };
+        ws.clientId = `guest-${crypto.randomUUID()}`;
+        logger.info(`Guest client connected: ${ws.clientId}`);
+      }
 
       ws.on('message', (rawData: WebSocket.RawData) => {
         try {

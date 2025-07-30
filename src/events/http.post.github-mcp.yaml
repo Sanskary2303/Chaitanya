@@ -1,0 +1,39 @@
+http.post./github-mcp:
+  fn: enhanced_github_mcp
+  description: Enhanced GitHub MCP integration with external servers
+  summary: Connect to external GitHub MCP servers and execute GitHub operations
+  body:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            query:
+              type: string
+              description: Natural language query for GitHub operations
+            operation:
+              type: string
+              description: Specific GitHub MCP operation to execute
+            clientName:
+              type: string
+              description: Name of the MCP client to use
+            serverType:
+              type: string
+              description: Type of GitHub MCP server (official, custom, python)
+              enum: [official, custom, python]
+              default: official
+          required:
+            - query
+  responses:
+    200:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              data:
+                type: object
+              message:
+                type: string

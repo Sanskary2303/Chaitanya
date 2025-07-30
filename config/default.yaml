@@ -1,5 +1,21 @@
 lang: js #you can also set 'coffee'. Default is 'js'. You can set either 'coffee' or 'js' as your inline scripting language
 
+# JWT Authentication Configuration
+jwt:
+  secret: "your-super-secret-jwt-key-change-this-in-production"
+  expiresIn: "24h"
+  issuer: "rag-node-api"
+  algorithm: "HS256"
+
+# Authentication settings
+auth:
+  enabled: true
+  saltRounds: 12
+  defaultAdminUser:
+    username: "admin"
+    password: "admin123" # Change this in production
+    email: "admin@ragnode.com"
+
 log:
   redact: # ['a.b.c', 'a.b.*', 'req.headers', 'mobileNumber'] #pino redact rules. Default null.
   log_attributes: #OTEL attributes to add in every log. by default null
@@ -8,5 +24,5 @@ log:
   timestamp: stdTimeFunctions.isoTime #Pino date formats
   bindings: # should pid and hostname be enabled in pino log bindings.
     pid: true
-    hostname: true 
+    hostname: true
 

@@ -1,0 +1,38 @@
+http.get./github-mcp-tools:
+  fn: enhanced_github_mcp.listGitHubMCPTools
+  description: List available GitHub MCP tools and resources
+  summary: Get all available tools and resources from connected GitHub MCP servers
+  responses:
+    200:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              data:
+                type: object
+                properties:
+                  tools:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        description:
+                          type: string
+                        inputSchema:
+                          type: object
+                  resources:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        uri:
+                          type: string
+                        name:
+                          type: string
+                        description:
+                          type: string

@@ -1,0 +1,117 @@
+"mcp.enhanced-chatbot":
+  fn: enhanced_mcp_chatbot
+  type: tool
+  summary: Enhanced MCP ChatBot with Local Tools Integration
+  description: "Advanced chatbot that can use local tools for file operations, command execution, and external MCP calls"
+  body:
+    type: object
+    required:
+      - query
+    properties:
+      query:
+        type: string
+        description: The user's natural language query
+      mode:
+        type: string
+        enum: ["rag", "chat", "analysis", "development", "debug"]
+        default: "rag"
+        description: Operating mode for the chatbot
+      enableFileOperations:
+        type: boolean
+        default: true
+        description: Enable file read/write operations
+      enableCommandExecution:
+        type: boolean
+        default: false
+        description: "Enable shell command execution (use with caution)"
+      enableExternalMCP:
+        type: boolean
+        default: true
+        description: Enable external MCP server calls
+      maxOutputLength:
+        type: integer
+        default: 10000
+        description: Maximum length of output content
+      workingDirectory:
+        type: string
+        description: "Working directory for file operations (optional)"
+  responses:
+    200:
+      description: Query processed successfully
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              code:
+                type: integer
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  context:
+                    type: string
+                    description: Processed context or tool results
+                  source_files:
+                    type: string
+                    description: Source of the information
+                  mode:
+                    type: string
+                    description: Operating mode used
+                  toolsUsed:
+                    type: array
+                    items:
+                      type: string
+                    description: List of tools that were used
+                  tool_results:
+                    type: array
+                    description: Detailed results from tool executions
+                  processed_with_tools:
+                    type: boolean
+                    description: Whether local tools were used
+                  timestamp:
+                    type: string
+                    format: date-time
+    400:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              code:
+                type: integer
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+    500:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              code:
+                type: integer
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string

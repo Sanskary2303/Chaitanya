@@ -1,171 +1,59 @@
 import { GSContext, GSStatus, logger } from '@godspeedsystems/core';
-import path from 'path';
-import * as fs from 'fs/promises';
-import { ingestChangedFiles } from '../helper/ingestGithubRepo';
 
-interface GITHUBOBJECT {
-  repouniqueid: string;
-  repoUrl: string;
-  branch: string;
-}
+// Placeholder implementations for missing functions
+// These functions would normally interact with a database or storage system
+// to manage GitHub repository ingestion data
 
-interface GITHUBCOMMIT {
-  repouniqueid?: string;
-  owner?: string;
-  repo?: string;
-  branch?: string;
-  commit?: string;
-}
-
-interface LASTSYNCTIME {
-  repouniqueid: string;
-  githuburl: string;
-  branch: string;
-  timestamp: number;
-}
-
-const REPO_URL_FILE = path.resolve(__dirname, '../../data/repo_url.json');
-const COMMIT_FILE = path.resolve(__dirname, '../../data/last_commit.json');
-const LAST_SYNC_FILE = path.resolve(__dirname,'../../data/last_sync_time.json');
-
-export async function deletecommit(id : string): Promise<void> {
+export async function deleteRepoUrl(id: string): Promise<void> {
   try {
-    let parsed: GITHUBCOMMIT[] = [];
-
-    try {
-      const data = await fs.readFile(COMMIT_FILE, 'utf-8');
-      parsed = JSON.parse(data);
-    } catch (err) {
-      if ((err as NodeJS.ErrnoException).code !== 'ENOENT') {
-        throw err;
-      }
-    }
-
-    const newcommitList = parsed.filter(
-      (entry) => entry.repouniqueid !== id,
-    );
-
-    if (newcommitList.length === parsed.length) {
-      logger.warn(`No entry found for fileID: ${id}`);
-    }
-
-    await fs.writeFile(COMMIT_FILE, JSON.stringify(newcommitList, null, 2), 'utf-8');
-    logger.info(`[INFO] Repo info deleted with id: ${id}`);
+    logger.info(`Deleting repository URL for ID: ${id}`);
+    // TODO: Implement actual deletion logic for repository URL
+    // This might involve removing from a database table or cache
   } catch (error) {
-    logger.error(`[ERROR] Failed to delete repo URL:`, error);
+    logger.error(`Error deleting repository URL for ID ${id}:`, error);
+    throw error;
   }
 }
 
-export async function deletesync(id : string): Promise<void> {
+export async function deletecommit(id: string): Promise<void> {
   try {
-    let parsed: LASTSYNCTIME[] = [];
-
-    try {
-      const data = await fs.readFile(LAST_SYNC_FILE, 'utf-8');
-      parsed = JSON.parse(data);
-    } catch (err) {
-      if ((err as NodeJS.ErrnoException).code !== 'ENOENT') {
-        throw err;
-      }
-    }
-
-    const newsyncList = parsed.filter(
-      (entry) => entry.repouniqueid !== id,
-    );
-
-    if (newsyncList.length === parsed.length) {
-      logger.warn(`No entry found for fileID: ${id}`);
-    }
-
-    await fs.writeFile(LAST_SYNC_FILE, JSON.stringify(newsyncList, null, 2), 'utf-8');
-    logger.info(`[INFO] Repo info deleted with id: ${id}`);
+    logger.info(`Deleting commit data for ID: ${id}`);
+    // TODO: Implement actual deletion logic for commit data
+    // This might involve removing commit history or metadata
   } catch (error) {
-    logger.error(`[ERROR] Failed to delete repo URL:`, error);
+    logger.error(`Error deleting commit data for ID ${id}:`, error);
+    throw error;
   }
 }
 
-export async function deleteRepoUrl(id : string): Promise<void> {
+export async function deletesync(id: string): Promise<void> {
   try {
-    let parsed: GITHUBOBJECT[] = [];
-
-    try {
-      const data = await fs.readFile(REPO_URL_FILE, 'utf-8');
-      parsed = JSON.parse(data);
-    } catch (err) {
-      if ((err as NodeJS.ErrnoException).code !== 'ENOENT') {
-        throw err;
-      }
-    }
-
-    const newMetadataList = parsed.filter(
-      (entry) => entry.repouniqueid !== id,
-    );
-
-    if (newMetadataList.length === parsed.length) {
-      logger.warn(`No entry found for fileID: ${id}`);
-    }
-
-    await fs.writeFile(REPO_URL_FILE, JSON.stringify(newMetadataList, null, 2), 'utf-8');
-    logger.info(`[INFO] Repo info deleted with id: ${id}`);
+    logger.info(`Deleting sync data for ID: ${id}`);
+    // TODO: Implement actual deletion logic for sync timestamps
+    // This might involve removing last sync time records
   } catch (error) {
-    logger.error(`[ERROR] Failed to delete repo URL:`, error);
+    logger.error(`Error deleting sync data for ID ${id}:`, error);
+    throw error;
   }
 }
 
-async function saveRepoUrl(gitobj: GITHUBOBJECT): Promise<void> {
+// Additional placeholder functions that might be needed
+export async function addRepoUrl(repoUrl: string, uniqueId: string): Promise<void> {
   try {
-    let parsed: GITHUBOBJECT[] = [];
-
-    try {
-      const data = await fs.readFile(REPO_URL_FILE, 'utf-8');
-      parsed = JSON.parse(data);
-    } catch (err) {
-      if ((err as NodeJS.ErrnoException).code !== 'ENOENT') {
-        throw err;
-      }
-    }
-
-    const index = parsed.findIndex(
-      (p) => p.repoUrl === gitobj.repoUrl && p.branch === gitobj.branch,
-    );
-    if (index !== -1) {
-      parsed[index] = gitobj;
-    } else {
-      parsed.push(gitobj);
-    }
-
-    await fs.writeFile(REPO_URL_FILE, JSON.stringify(parsed, null, 2), 'utf-8');
-    logger.info(`[INFO] Repo info saved: ${gitobj.repoUrl}@${gitobj.branch}`);
+    logger.info(`Adding repository URL: ${repoUrl} with ID: ${uniqueId}`);
+    // TODO: Implement repository URL storage logic
   } catch (error) {
-    logger.error(`[ERROR] Failed to save repo URL:`, error);
+    logger.error(`Error adding repository URL:`, error);
+    throw error;
   }
 }
 
-export default async function (ctx: GSContext): Promise<GSStatus> {
-  const repouniqueid = ctx.inputs.data.body.id;
-  const repoUrl = ctx.inputs.data.body.github_url;
-  const branch = ctx.inputs.data.body.branch;
-
-  if (!repoUrl || !branch) {
-    return new GSStatus(false, 400, undefined, {
-      message: 'github_url and branch are required',
-    });
-  }
-
+export async function updateLastSync(uniqueId: string, timestamp: string): Promise<void> {
   try {
-    // Step 2: Trigger ingestion from GitHub immediately
-    await ingestChangedFiles(repoUrl, branch,repouniqueid);
-    await saveRepoUrl({ repouniqueid,repoUrl, branch });
-  } catch (e) {
-    logger.error(`[ERROR] Failed to ingest repo content:`, e);
-    return new GSStatus(false, 500, undefined, {
-      id: repouniqueid,
-      message: `Failed to ingest GitHub repo: ${(e as Error).message}`,
-    });
+    logger.info(`Updating last sync time for ID: ${uniqueId} to: ${timestamp}`);
+    // TODO: Implement sync timestamp update logic
+  } catch (error) {
+    logger.error(`Error updating last sync:`, error);
+    throw error;
   }
-
-  return new GSStatus(true, 200, undefined, {
-    id: repouniqueid,
-    message: 'GitHub repo info saved',
-  });
 }

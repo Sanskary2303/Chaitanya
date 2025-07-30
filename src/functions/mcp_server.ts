@@ -8,7 +8,7 @@ export default async function handleQuery(ctx: GSContext, args: PlainObject) {
     return new GSStatus(false, 400, 'Invalid query');
   }
 
-  const rag = new RAGPipeline();
+  const rag = new RAGPipeline(ctx);
   const result = await rag.run(query);
 
   return new GSStatus(true, 200, undefined, result);

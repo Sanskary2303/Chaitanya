@@ -1,0 +1,88 @@
+{
+  "summary": {
+    "total": 10,
+    "passed": 7,
+    "failed": 2,
+    "warnings": 1
+  },
+  "timestamp": "2025-07-29T22:55:43.723Z",
+  "results": [
+    {
+      "test": "GitHub Token",
+      "status": "PASS",
+      "message": "GitHub token is set in environment",
+      "data": null,
+      "timestamp": "2025-07-29T22:55:43.048Z"
+    },
+    {
+      "test": "Token Format",
+      "status": "PASS",
+      "message": "GitHub token has correct format",
+      "data": null,
+      "timestamp": "2025-07-29T22:55:43.049Z"
+    },
+    {
+      "test": "GitHub API Auth",
+      "status": "FAIL",
+      "message": "Authentication failed",
+      "data": {
+        "message": "Bad credentials",
+        "documentation_url": "https://docs.github.com/rest",
+        "status": "401"
+      },
+      "timestamp": "2025-07-29T22:55:43.581Z"
+    },
+    {
+      "test": "MCP SDK Import",
+      "status": "PASS",
+      "message": "MCP SDK imported successfully",
+      "data": null,
+      "timestamp": "2025-07-29T22:55:43.653Z"
+    },
+    {
+      "test": "MCP Transport",
+      "status": "PASS",
+      "message": "MCP transport imported successfully",
+      "data": null,
+      "timestamp": "2025-07-29T22:55:43.670Z"
+    },
+    {
+      "test": "MCP Client File",
+      "status": "PASS",
+      "message": "GitHub MCP client file exists",
+      "data": null,
+      "timestamp": "2025-07-29T22:55:43.670Z"
+    },
+    {
+      "test": "MCP Client Import",
+      "status": "WARN",
+      "message": "GitHub MCP client needs compilation",
+      "data": null,
+      "timestamp": "2025-07-29T22:55:43.671Z"
+    },
+    {
+      "test": "Chatbot Server",
+      "status": "PASS",
+      "message": "Chatbot server is running",
+      "data": null,
+      "timestamp": "2025-07-29T22:55:43.694Z"
+    },
+    {
+      "test": "Chatbot Integration",
+      "status": "FAIL",
+      "message": "Chatbot test failed: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON",
+      "data": null,
+      "timestamp": "2025-07-29T22:55:43.719Z"
+    },
+    {
+      "test": "VS Code MCP Config",
+      "status": "PASS",
+      "message": "GitHub MCP server configured in VS Code",
+      "data": {
+        "type": "http",
+        "url": "https://api.githubcopilot.com/mcp/"
+      },
+      "timestamp": "2025-07-29T22:55:43.722Z"
+    }
+  ]
+}

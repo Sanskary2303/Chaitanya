@@ -1,11 +1,13 @@
-import { VectorStore } from './vectorStore';
-import { logger } from '@godspeedsystems/core';
+import { HybridVectorStore } from './hybridVectorStore';
+import { logger, GSContext } from '@godspeedsystems/core';
 
 export class RAGPipeline {
-  private vs: VectorStore
+  private vs: HybridVectorStore
+  private ctx: GSContext
 
-  constructor() {
-        this.vs = new VectorStore();
+  constructor(ctx: GSContext) {
+        this.ctx = ctx;
+        this.vs = new HybridVectorStore(ctx);
     }
 
   // public static async create(): Promise<RAGPipeline> {
@@ -15,12 +17,12 @@ export class RAGPipeline {
   // }
   async run(
     query: string,
-    k: number = 5,
+    k: number = 3,  // Reduced from 5 to 3 to be safer with small datasets
   ): Promise<{ context: string; source_files: string }> {
     if (!this.vs) {
       throw new Error('RAGPipeline not initialized. Call create() first.');
     }
-    logger.info(query)
+    logger.info(`RAG query: ${query} with k=${k}`);
     const docs = await this.vs.search(query, k);
     const unique_docs = Array.from(
       new Set(docs.map((doc) => `${doc.content}`)),

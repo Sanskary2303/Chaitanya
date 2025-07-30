@@ -4,15 +4,21 @@ import {
   PlainObject,
   logger,
 } from '@godspeedsystems/core';
-import { VectorStore } from '../helper/vectorStore';
+import { HybridVectorStore } from '../helper/hybridVectorStore';
 import { deleteFileMetadata } from './upload_docs_fn';
+import { requireAuth } from '../helper/auth';
 
 export default async function del_repo_files(ctx: GSContext) {
+  // Check authentication first
+  const authResult = requireAuth(ctx);
+  if (authResult) {
+    return authResult;
+  }
   const { id } = ctx.inputs.data.params;
-  const vs = new VectorStore();
+  const vs = new HybridVectorStore(ctx);
   logger.info('Unique id : ', id);
   try {
-    await vs.removeUploadedDocs(id);
+    await vs.removeDocument(id);
     await deleteFileMetadata(id);
     return new GSStatus(
       true,

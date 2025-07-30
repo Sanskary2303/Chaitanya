@@ -50,52 +50,6 @@ export type VectorChunk = $Result.DefaultSelection<Prisma.$VectorChunkPayload>
 export type SystemPrompt = $Result.DefaultSelection<Prisma.$SystemPromptPayload>
 
 /**
- * Enums
- */
-export namespace $Enums {
-  export const MessageRole: {
-  USER: 'USER',
-  ASSISTANT: 'ASSISTANT',
-  SYSTEM: 'SYSTEM'
-};
-
-export type MessageRole = (typeof MessageRole)[keyof typeof MessageRole]
-
-
-export const DocStatus: {
-  PROCESSING: 'PROCESSING',
-  COMPLETED: 'COMPLETED',
-  FAILED: 'FAILED'
-};
-
-export type DocStatus = (typeof DocStatus)[keyof typeof DocStatus]
-
-
-export const RepoStatus: {
-  PENDING: 'PENDING',
-  CLONING: 'CLONING',
-  PROCESSING: 'PROCESSING',
-  COMPLETED: 'COMPLETED',
-  FAILED: 'FAILED'
-};
-
-export type RepoStatus = (typeof RepoStatus)[keyof typeof RepoStatus]
-
-}
-
-export type MessageRole = $Enums.MessageRole
-
-export const MessageRole: typeof $Enums.MessageRole
-
-export type DocStatus = $Enums.DocStatus
-
-export const DocStatus: typeof $Enums.DocStatus
-
-export type RepoStatus = $Enums.RepoStatus
-
-export const RepoStatus: typeof $Enums.RepoStatus
-
-/**
  * ##  Prisma Client ʲˢ
  *
  * Type-safe database client for TypeScript & Node.js
@@ -3890,7 +3844,7 @@ export namespace Prisma {
   export type MessageMinAggregateOutputType = {
     id: string | null
     sessionId: string | null
-    role: $Enums.MessageRole | null
+    role: string | null
     content: string | null
     createdAt: Date | null
   }
@@ -3898,7 +3852,7 @@ export namespace Prisma {
   export type MessageMaxAggregateOutputType = {
     id: string | null
     sessionId: string | null
-    role: $Enums.MessageRole | null
+    role: string | null
     content: string | null
     createdAt: Date | null
   }
@@ -4015,7 +3969,7 @@ export namespace Prisma {
   export type MessageGroupByOutputType = {
     id: string
     sessionId: string
-    role: $Enums.MessageRole
+    role: string
     content: string
     metadata: JsonValue | null
     createdAt: Date
@@ -4096,7 +4050,7 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       sessionId: string
-      role: $Enums.MessageRole
+      role: string
       content: string
       metadata: Prisma.JsonValue | null
       createdAt: Date
@@ -4526,7 +4480,7 @@ export namespace Prisma {
   interface MessageFieldRefs {
     readonly id: FieldRef<"Message", 'String'>
     readonly sessionId: FieldRef<"Message", 'String'>
-    readonly role: FieldRef<"Message", 'MessageRole'>
+    readonly role: FieldRef<"Message", 'String'>
     readonly content: FieldRef<"Message", 'String'>
     readonly metadata: FieldRef<"Message", 'Json'>
     readonly createdAt: FieldRef<"Message", 'DateTime'>
@@ -4971,7 +4925,7 @@ export namespace Prisma {
     size: number | null
     content: string | null
     extractedText: string | null
-    status: $Enums.DocStatus | null
+    status: string | null
     uploadPath: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -4986,7 +4940,7 @@ export namespace Prisma {
     size: number | null
     content: string | null
     extractedText: string | null
-    status: $Enums.DocStatus | null
+    status: string | null
     uploadPath: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -5161,7 +5115,7 @@ export namespace Prisma {
     content: string | null
     extractedText: string | null
     metadata: JsonValue | null
-    status: $Enums.DocStatus
+    status: string
     uploadPath: string | null
     createdAt: Date
     updatedAt: Date
@@ -5284,7 +5238,7 @@ export namespace Prisma {
       content: string | null
       extractedText: string | null
       metadata: Prisma.JsonValue | null
-      status: $Enums.DocStatus
+      status: string
       uploadPath: string | null
       createdAt: Date
       updatedAt: Date
@@ -5722,7 +5676,7 @@ export namespace Prisma {
     readonly content: FieldRef<"Document", 'String'>
     readonly extractedText: FieldRef<"Document", 'String'>
     readonly metadata: FieldRef<"Document", 'Json'>
-    readonly status: FieldRef<"Document", 'DocStatus'>
+    readonly status: FieldRef<"Document", 'String'>
     readonly uploadPath: FieldRef<"Document", 'String'>
     readonly createdAt: FieldRef<"Document", 'DateTime'>
     readonly updatedAt: FieldRef<"Document", 'DateTime'>
@@ -6198,7 +6152,7 @@ export namespace Prisma {
     repoName: string | null
     branch: string | null
     lastSyncAt: Date | null
-    status: $Enums.RepoStatus | null
+    status: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -6210,7 +6164,7 @@ export namespace Prisma {
     repoName: string | null
     branch: string | null
     lastSyncAt: Date | null
-    status: $Enums.RepoStatus | null
+    status: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -6347,7 +6301,7 @@ export namespace Prisma {
     repoName: string
     branch: string
     lastSyncAt: Date | null
-    status: $Enums.RepoStatus
+    status: string
     metadata: JsonValue | null
     createdAt: Date
     updatedAt: Date
@@ -6453,7 +6407,7 @@ export namespace Prisma {
       repoName: string
       branch: string
       lastSyncAt: Date | null
-      status: $Enums.RepoStatus
+      status: string
       metadata: Prisma.JsonValue | null
       createdAt: Date
       updatedAt: Date
@@ -6888,7 +6842,7 @@ export namespace Prisma {
     readonly repoName: FieldRef<"GitHubRepository", 'String'>
     readonly branch: FieldRef<"GitHubRepository", 'String'>
     readonly lastSyncAt: FieldRef<"GitHubRepository", 'DateTime'>
-    readonly status: FieldRef<"GitHubRepository", 'RepoStatus'>
+    readonly status: FieldRef<"GitHubRepository", 'String'>
     readonly metadata: FieldRef<"GitHubRepository", 'Json'>
     readonly createdAt: FieldRef<"GitHubRepository", 'DateTime'>
     readonly updatedAt: FieldRef<"GitHubRepository", 'DateTime'>
@@ -7573,8 +7527,8 @@ export namespace Prisma {
     metadata?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    document?: boolean | VectorChunk$documentArgs<ExtArgs>
     repository?: boolean | VectorChunk$repositoryArgs<ExtArgs>
+    document?: boolean | VectorChunk$documentArgs<ExtArgs>
   }, ExtArgs["result"]["vectorChunk"]>
 
   export type VectorChunkSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -7587,8 +7541,8 @@ export namespace Prisma {
     metadata?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    document?: boolean | VectorChunk$documentArgs<ExtArgs>
     repository?: boolean | VectorChunk$repositoryArgs<ExtArgs>
+    document?: boolean | VectorChunk$documentArgs<ExtArgs>
   }, ExtArgs["result"]["vectorChunk"]>
 
   export type VectorChunkSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -7601,8 +7555,8 @@ export namespace Prisma {
     metadata?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    document?: boolean | VectorChunk$documentArgs<ExtArgs>
     repository?: boolean | VectorChunk$repositoryArgs<ExtArgs>
+    document?: boolean | VectorChunk$documentArgs<ExtArgs>
   }, ExtArgs["result"]["vectorChunk"]>
 
   export type VectorChunkSelectScalar = {
@@ -7619,23 +7573,23 @@ export namespace Prisma {
 
   export type VectorChunkOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "docId" | "repoId" | "chunkIndex" | "content" | "embedding" | "metadata" | "createdAt" | "updatedAt", ExtArgs["result"]["vectorChunk"]>
   export type VectorChunkInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    document?: boolean | VectorChunk$documentArgs<ExtArgs>
     repository?: boolean | VectorChunk$repositoryArgs<ExtArgs>
+    document?: boolean | VectorChunk$documentArgs<ExtArgs>
   }
   export type VectorChunkIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    document?: boolean | VectorChunk$documentArgs<ExtArgs>
     repository?: boolean | VectorChunk$repositoryArgs<ExtArgs>
+    document?: boolean | VectorChunk$documentArgs<ExtArgs>
   }
   export type VectorChunkIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    document?: boolean | VectorChunk$documentArgs<ExtArgs>
     repository?: boolean | VectorChunk$repositoryArgs<ExtArgs>
+    document?: boolean | VectorChunk$documentArgs<ExtArgs>
   }
 
   export type $VectorChunkPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "VectorChunk"
     objects: {
-      document: Prisma.$DocumentPayload<ExtArgs> | null
       repository: Prisma.$GitHubRepositoryPayload<ExtArgs> | null
+      document: Prisma.$DocumentPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -8041,8 +7995,8 @@ export namespace Prisma {
    */
   export interface Prisma__VectorChunkClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    document<T extends VectorChunk$documentArgs<ExtArgs> = {}>(args?: Subset<T, VectorChunk$documentArgs<ExtArgs>>): Prisma__DocumentClient<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     repository<T extends VectorChunk$repositoryArgs<ExtArgs> = {}>(args?: Subset<T, VectorChunk$repositoryArgs<ExtArgs>>): Prisma__GitHubRepositoryClient<$Result.GetResult<Prisma.$GitHubRepositoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    document<T extends VectorChunk$documentArgs<ExtArgs> = {}>(args?: Subset<T, VectorChunk$documentArgs<ExtArgs>>): Prisma__DocumentClient<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -8475,25 +8429,6 @@ export namespace Prisma {
   }
 
   /**
-   * VectorChunk.document
-   */
-  export type VectorChunk$documentArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Document
-     */
-    select?: DocumentSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Document
-     */
-    omit?: DocumentOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: DocumentInclude<ExtArgs> | null
-    where?: DocumentWhereInput
-  }
-
-  /**
    * VectorChunk.repository
    */
   export type VectorChunk$repositoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -8510,6 +8445,25 @@ export namespace Prisma {
      */
     include?: GitHubRepositoryInclude<ExtArgs> | null
     where?: GitHubRepositoryWhereInput
+  }
+
+  /**
+   * VectorChunk.document
+   */
+  export type VectorChunk$documentArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Document
+     */
+    select?: DocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Document
+     */
+    omit?: DocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentInclude<ExtArgs> | null
+    where?: DocumentWhereInput
   }
 
   /**
@@ -9715,30 +9669,9 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'MessageRole'
-   */
-  export type EnumMessageRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MessageRole'>
-    
-
-
-  /**
    * Reference to a field of type 'Int'
    */
   export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
-    
-
-
-  /**
-   * Reference to a field of type 'DocStatus'
-   */
-  export type EnumDocStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DocStatus'>
-    
-
-
-  /**
-   * Reference to a field of type 'RepoStatus'
-   */
-  export type EnumRepoStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RepoStatus'>
     
 
 
@@ -9892,7 +9825,7 @@ export namespace Prisma {
     NOT?: MessageWhereInput | MessageWhereInput[]
     id?: StringFilter<"Message"> | string
     sessionId?: StringFilter<"Message"> | string
-    role?: EnumMessageRoleFilter<"Message"> | $Enums.MessageRole
+    role?: StringFilter<"Message"> | string
     content?: StringFilter<"Message"> | string
     metadata?: JsonNullableFilter<"Message">
     createdAt?: DateTimeFilter<"Message"> | Date | string
@@ -9915,7 +9848,7 @@ export namespace Prisma {
     OR?: MessageWhereInput[]
     NOT?: MessageWhereInput | MessageWhereInput[]
     sessionId?: StringFilter<"Message"> | string
-    role?: EnumMessageRoleFilter<"Message"> | $Enums.MessageRole
+    role?: StringFilter<"Message"> | string
     content?: StringFilter<"Message"> | string
     metadata?: JsonNullableFilter<"Message">
     createdAt?: DateTimeFilter<"Message"> | Date | string
@@ -9940,7 +9873,7 @@ export namespace Prisma {
     NOT?: MessageScalarWhereWithAggregatesInput | MessageScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Message"> | string
     sessionId?: StringWithAggregatesFilter<"Message"> | string
-    role?: EnumMessageRoleWithAggregatesFilter<"Message"> | $Enums.MessageRole
+    role?: StringWithAggregatesFilter<"Message"> | string
     content?: StringWithAggregatesFilter<"Message"> | string
     metadata?: JsonNullableWithAggregatesFilter<"Message">
     createdAt?: DateTimeWithAggregatesFilter<"Message"> | Date | string
@@ -9959,7 +9892,7 @@ export namespace Prisma {
     content?: StringNullableFilter<"Document"> | string | null
     extractedText?: StringNullableFilter<"Document"> | string | null
     metadata?: JsonNullableFilter<"Document">
-    status?: EnumDocStatusFilter<"Document"> | $Enums.DocStatus
+    status?: StringFilter<"Document"> | string
     uploadPath?: StringNullableFilter<"Document"> | string | null
     createdAt?: DateTimeFilter<"Document"> | Date | string
     updatedAt?: DateTimeFilter<"Document"> | Date | string
@@ -9998,7 +9931,7 @@ export namespace Prisma {
     content?: StringNullableFilter<"Document"> | string | null
     extractedText?: StringNullableFilter<"Document"> | string | null
     metadata?: JsonNullableFilter<"Document">
-    status?: EnumDocStatusFilter<"Document"> | $Enums.DocStatus
+    status?: StringFilter<"Document"> | string
     uploadPath?: StringNullableFilter<"Document"> | string | null
     createdAt?: DateTimeFilter<"Document"> | Date | string
     updatedAt?: DateTimeFilter<"Document"> | Date | string
@@ -10040,7 +9973,7 @@ export namespace Prisma {
     content?: StringNullableWithAggregatesFilter<"Document"> | string | null
     extractedText?: StringNullableWithAggregatesFilter<"Document"> | string | null
     metadata?: JsonNullableWithAggregatesFilter<"Document">
-    status?: EnumDocStatusWithAggregatesFilter<"Document"> | $Enums.DocStatus
+    status?: StringWithAggregatesFilter<"Document"> | string
     uploadPath?: StringNullableWithAggregatesFilter<"Document"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Document"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Document"> | Date | string
@@ -10056,7 +9989,7 @@ export namespace Prisma {
     repoName?: StringFilter<"GitHubRepository"> | string
     branch?: StringFilter<"GitHubRepository"> | string
     lastSyncAt?: DateTimeNullableFilter<"GitHubRepository"> | Date | string | null
-    status?: EnumRepoStatusFilter<"GitHubRepository"> | $Enums.RepoStatus
+    status?: StringFilter<"GitHubRepository"> | string
     metadata?: JsonNullableFilter<"GitHubRepository">
     createdAt?: DateTimeFilter<"GitHubRepository"> | Date | string
     updatedAt?: DateTimeFilter<"GitHubRepository"> | Date | string
@@ -10090,7 +10023,7 @@ export namespace Prisma {
     repoName?: StringFilter<"GitHubRepository"> | string
     branch?: StringFilter<"GitHubRepository"> | string
     lastSyncAt?: DateTimeNullableFilter<"GitHubRepository"> | Date | string | null
-    status?: EnumRepoStatusFilter<"GitHubRepository"> | $Enums.RepoStatus
+    status?: StringFilter<"GitHubRepository"> | string
     metadata?: JsonNullableFilter<"GitHubRepository">
     createdAt?: DateTimeFilter<"GitHubRepository"> | Date | string
     updatedAt?: DateTimeFilter<"GitHubRepository"> | Date | string
@@ -10124,7 +10057,7 @@ export namespace Prisma {
     repoName?: StringWithAggregatesFilter<"GitHubRepository"> | string
     branch?: StringWithAggregatesFilter<"GitHubRepository"> | string
     lastSyncAt?: DateTimeNullableWithAggregatesFilter<"GitHubRepository"> | Date | string | null
-    status?: EnumRepoStatusWithAggregatesFilter<"GitHubRepository"> | $Enums.RepoStatus
+    status?: StringWithAggregatesFilter<"GitHubRepository"> | string
     metadata?: JsonNullableWithAggregatesFilter<"GitHubRepository">
     createdAt?: DateTimeWithAggregatesFilter<"GitHubRepository"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"GitHubRepository"> | Date | string
@@ -10143,8 +10076,8 @@ export namespace Prisma {
     metadata?: JsonNullableFilter<"VectorChunk">
     createdAt?: DateTimeFilter<"VectorChunk"> | Date | string
     updatedAt?: DateTimeFilter<"VectorChunk"> | Date | string
-    document?: XOR<DocumentNullableScalarRelationFilter, DocumentWhereInput> | null
     repository?: XOR<GitHubRepositoryNullableScalarRelationFilter, GitHubRepositoryWhereInput> | null
+    document?: XOR<DocumentNullableScalarRelationFilter, DocumentWhereInput> | null
   }
 
   export type VectorChunkOrderByWithRelationInput = {
@@ -10157,8 +10090,8 @@ export namespace Prisma {
     metadata?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    document?: DocumentOrderByWithRelationInput
     repository?: GitHubRepositoryOrderByWithRelationInput
+    document?: DocumentOrderByWithRelationInput
   }
 
   export type VectorChunkWhereUniqueInput = Prisma.AtLeast<{
@@ -10176,8 +10109,8 @@ export namespace Prisma {
     metadata?: JsonNullableFilter<"VectorChunk">
     createdAt?: DateTimeFilter<"VectorChunk"> | Date | string
     updatedAt?: DateTimeFilter<"VectorChunk"> | Date | string
-    document?: XOR<DocumentNullableScalarRelationFilter, DocumentWhereInput> | null
     repository?: XOR<GitHubRepositoryNullableScalarRelationFilter, GitHubRepositoryWhereInput> | null
+    document?: XOR<DocumentNullableScalarRelationFilter, DocumentWhereInput> | null
   }, "id" | "docId_chunkIndex" | "repoId_chunkIndex">
 
   export type VectorChunkOrderByWithAggregationInput = {
@@ -10414,7 +10347,7 @@ export namespace Prisma {
 
   export type MessageCreateInput = {
     id?: string
-    role: $Enums.MessageRole
+    role: string
     content: string
     metadata?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
@@ -10424,7 +10357,7 @@ export namespace Prisma {
   export type MessageUncheckedCreateInput = {
     id?: string
     sessionId: string
-    role: $Enums.MessageRole
+    role: string
     content: string
     metadata?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
@@ -10432,7 +10365,7 @@ export namespace Prisma {
 
   export type MessageUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    role?: EnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole
+    role?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -10442,7 +10375,7 @@ export namespace Prisma {
   export type MessageUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     sessionId?: StringFieldUpdateOperationsInput | string
-    role?: EnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole
+    role?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -10451,7 +10384,7 @@ export namespace Prisma {
   export type MessageCreateManyInput = {
     id?: string
     sessionId: string
-    role: $Enums.MessageRole
+    role: string
     content: string
     metadata?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
@@ -10459,7 +10392,7 @@ export namespace Prisma {
 
   export type MessageUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    role?: EnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole
+    role?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -10468,7 +10401,7 @@ export namespace Prisma {
   export type MessageUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     sessionId?: StringFieldUpdateOperationsInput | string
-    role?: EnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole
+    role?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -10483,7 +10416,7 @@ export namespace Prisma {
     content?: string | null
     extractedText?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
-    status?: $Enums.DocStatus
+    status?: string
     uploadPath?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -10501,7 +10434,7 @@ export namespace Prisma {
     content?: string | null
     extractedText?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
-    status?: $Enums.DocStatus
+    status?: string
     uploadPath?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -10517,7 +10450,7 @@ export namespace Prisma {
     content?: NullableStringFieldUpdateOperationsInput | string | null
     extractedText?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
-    status?: EnumDocStatusFieldUpdateOperationsInput | $Enums.DocStatus
+    status?: StringFieldUpdateOperationsInput | string
     uploadPath?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -10535,7 +10468,7 @@ export namespace Prisma {
     content?: NullableStringFieldUpdateOperationsInput | string | null
     extractedText?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
-    status?: EnumDocStatusFieldUpdateOperationsInput | $Enums.DocStatus
+    status?: StringFieldUpdateOperationsInput | string
     uploadPath?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -10552,7 +10485,7 @@ export namespace Prisma {
     content?: string | null
     extractedText?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
-    status?: $Enums.DocStatus
+    status?: string
     uploadPath?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -10567,7 +10500,7 @@ export namespace Prisma {
     content?: NullableStringFieldUpdateOperationsInput | string | null
     extractedText?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
-    status?: EnumDocStatusFieldUpdateOperationsInput | $Enums.DocStatus
+    status?: StringFieldUpdateOperationsInput | string
     uploadPath?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -10583,7 +10516,7 @@ export namespace Prisma {
     content?: NullableStringFieldUpdateOperationsInput | string | null
     extractedText?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
-    status?: EnumDocStatusFieldUpdateOperationsInput | $Enums.DocStatus
+    status?: StringFieldUpdateOperationsInput | string
     uploadPath?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -10595,7 +10528,7 @@ export namespace Prisma {
     repoName: string
     branch?: string
     lastSyncAt?: Date | string | null
-    status?: $Enums.RepoStatus
+    status?: string
     metadata?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -10610,7 +10543,7 @@ export namespace Prisma {
     repoName: string
     branch?: string
     lastSyncAt?: Date | string | null
-    status?: $Enums.RepoStatus
+    status?: string
     metadata?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -10623,7 +10556,7 @@ export namespace Prisma {
     repoName?: StringFieldUpdateOperationsInput | string
     branch?: StringFieldUpdateOperationsInput | string
     lastSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: EnumRepoStatusFieldUpdateOperationsInput | $Enums.RepoStatus
+    status?: StringFieldUpdateOperationsInput | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -10638,7 +10571,7 @@ export namespace Prisma {
     repoName?: StringFieldUpdateOperationsInput | string
     branch?: StringFieldUpdateOperationsInput | string
     lastSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: EnumRepoStatusFieldUpdateOperationsInput | $Enums.RepoStatus
+    status?: StringFieldUpdateOperationsInput | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -10652,7 +10585,7 @@ export namespace Prisma {
     repoName: string
     branch?: string
     lastSyncAt?: Date | string | null
-    status?: $Enums.RepoStatus
+    status?: string
     metadata?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -10664,7 +10597,7 @@ export namespace Prisma {
     repoName?: StringFieldUpdateOperationsInput | string
     branch?: StringFieldUpdateOperationsInput | string
     lastSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: EnumRepoStatusFieldUpdateOperationsInput | $Enums.RepoStatus
+    status?: StringFieldUpdateOperationsInput | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -10677,7 +10610,7 @@ export namespace Prisma {
     repoName?: StringFieldUpdateOperationsInput | string
     branch?: StringFieldUpdateOperationsInput | string
     lastSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: EnumRepoStatusFieldUpdateOperationsInput | $Enums.RepoStatus
+    status?: StringFieldUpdateOperationsInput | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -10691,8 +10624,8 @@ export namespace Prisma {
     metadata?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
-    document?: DocumentCreateNestedOneWithoutVectorChunksInput
     repository?: GitHubRepositoryCreateNestedOneWithoutVectorChunksInput
+    document?: DocumentCreateNestedOneWithoutVectorChunksInput
   }
 
   export type VectorChunkUncheckedCreateInput = {
@@ -10715,8 +10648,8 @@ export namespace Prisma {
     metadata?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    document?: DocumentUpdateOneWithoutVectorChunksNestedInput
     repository?: GitHubRepositoryUpdateOneWithoutVectorChunksNestedInput
+    document?: DocumentUpdateOneWithoutVectorChunksNestedInput
   }
 
   export type VectorChunkUncheckedUpdateInput = {
@@ -11065,13 +10998,6 @@ export namespace Prisma {
     _max?: NestedJsonNullableFilter<$PrismaModel>
   }
 
-  export type EnumMessageRoleFilter<$PrismaModel = never> = {
-    equals?: $Enums.MessageRole | EnumMessageRoleFieldRefInput<$PrismaModel>
-    in?: $Enums.MessageRole[]
-    notIn?: $Enums.MessageRole[]
-    not?: NestedEnumMessageRoleFilter<$PrismaModel> | $Enums.MessageRole
-  }
-
   export type ChatSessionScalarRelationFilter = {
     is?: ChatSessionWhereInput
     isNot?: ChatSessionWhereInput
@@ -11102,16 +11028,6 @@ export namespace Prisma {
     createdAt?: SortOrder
   }
 
-  export type EnumMessageRoleWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.MessageRole | EnumMessageRoleFieldRefInput<$PrismaModel>
-    in?: $Enums.MessageRole[]
-    notIn?: $Enums.MessageRole[]
-    not?: NestedEnumMessageRoleWithAggregatesFilter<$PrismaModel> | $Enums.MessageRole
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumMessageRoleFilter<$PrismaModel>
-    _max?: NestedEnumMessageRoleFilter<$PrismaModel>
-  }
-
   export type IntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[]
@@ -11121,13 +11037,6 @@ export namespace Prisma {
     gt?: number | IntFieldRefInput<$PrismaModel>
     gte?: number | IntFieldRefInput<$PrismaModel>
     not?: NestedIntFilter<$PrismaModel> | number
-  }
-
-  export type EnumDocStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.DocStatus | EnumDocStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.DocStatus[]
-    notIn?: $Enums.DocStatus[]
-    not?: NestedEnumDocStatusFilter<$PrismaModel> | $Enums.DocStatus
   }
 
   export type VectorChunkListRelationFilter = {
@@ -11210,16 +11119,6 @@ export namespace Prisma {
     _max?: NestedIntFilter<$PrismaModel>
   }
 
-  export type EnumDocStatusWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.DocStatus | EnumDocStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.DocStatus[]
-    notIn?: $Enums.DocStatus[]
-    not?: NestedEnumDocStatusWithAggregatesFilter<$PrismaModel> | $Enums.DocStatus
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumDocStatusFilter<$PrismaModel>
-    _max?: NestedEnumDocStatusFilter<$PrismaModel>
-  }
-
   export type DateTimeNullableFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
     in?: Date[] | string[] | null
@@ -11229,13 +11128,6 @@ export namespace Prisma {
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
-  }
-
-  export type EnumRepoStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.RepoStatus | EnumRepoStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.RepoStatus[]
-    notIn?: $Enums.RepoStatus[]
-    not?: NestedEnumRepoStatusFilter<$PrismaModel> | $Enums.RepoStatus
   }
 
   export type GitHubRepositoryRepoUrlBranchCompoundUniqueInput = {
@@ -11294,24 +11186,14 @@ export namespace Prisma {
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
-  export type EnumRepoStatusWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.RepoStatus | EnumRepoStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.RepoStatus[]
-    notIn?: $Enums.RepoStatus[]
-    not?: NestedEnumRepoStatusWithAggregatesFilter<$PrismaModel> | $Enums.RepoStatus
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumRepoStatusFilter<$PrismaModel>
-    _max?: NestedEnumRepoStatusFilter<$PrismaModel>
+  export type GitHubRepositoryNullableScalarRelationFilter = {
+    is?: GitHubRepositoryWhereInput | null
+    isNot?: GitHubRepositoryWhereInput | null
   }
 
   export type DocumentNullableScalarRelationFilter = {
     is?: DocumentWhereInput | null
     isNot?: DocumentWhereInput | null
-  }
-
-  export type GitHubRepositoryNullableScalarRelationFilter = {
-    is?: GitHubRepositoryWhereInput | null
-    isNot?: GitHubRepositoryWhereInput | null
   }
 
   export type VectorChunkDocIdChunkIndexCompoundUniqueInput = {
@@ -11596,10 +11478,6 @@ export namespace Prisma {
     connect?: ChatSessionWhereUniqueInput
   }
 
-  export type EnumMessageRoleFieldUpdateOperationsInput = {
-    set?: $Enums.MessageRole
-  }
-
   export type ChatSessionUpdateOneRequiredWithoutMessagesNestedInput = {
     create?: XOR<ChatSessionCreateWithoutMessagesInput, ChatSessionUncheckedCreateWithoutMessagesInput>
     connectOrCreate?: ChatSessionCreateOrConnectWithoutMessagesInput
@@ -11634,10 +11512,6 @@ export namespace Prisma {
     decrement?: number
     multiply?: number
     divide?: number
-  }
-
-  export type EnumDocStatusFieldUpdateOperationsInput = {
-    set?: $Enums.DocStatus
   }
 
   export type UserUpdateOneWithoutDocumentsNestedInput = {
@@ -11702,10 +11576,6 @@ export namespace Prisma {
     set?: Date | string | null
   }
 
-  export type EnumRepoStatusFieldUpdateOperationsInput = {
-    set?: $Enums.RepoStatus
-  }
-
   export type UserUpdateOneWithoutRepositoriesNestedInput = {
     create?: XOR<UserCreateWithoutRepositoriesInput, UserUncheckedCreateWithoutRepositoriesInput>
     connectOrCreate?: UserCreateOrConnectWithoutRepositoriesInput
@@ -11744,26 +11614,16 @@ export namespace Prisma {
     deleteMany?: VectorChunkScalarWhereInput | VectorChunkScalarWhereInput[]
   }
 
-  export type DocumentCreateNestedOneWithoutVectorChunksInput = {
-    create?: XOR<DocumentCreateWithoutVectorChunksInput, DocumentUncheckedCreateWithoutVectorChunksInput>
-    connectOrCreate?: DocumentCreateOrConnectWithoutVectorChunksInput
-    connect?: DocumentWhereUniqueInput
-  }
-
   export type GitHubRepositoryCreateNestedOneWithoutVectorChunksInput = {
     create?: XOR<GitHubRepositoryCreateWithoutVectorChunksInput, GitHubRepositoryUncheckedCreateWithoutVectorChunksInput>
     connectOrCreate?: GitHubRepositoryCreateOrConnectWithoutVectorChunksInput
     connect?: GitHubRepositoryWhereUniqueInput
   }
 
-  export type DocumentUpdateOneWithoutVectorChunksNestedInput = {
+  export type DocumentCreateNestedOneWithoutVectorChunksInput = {
     create?: XOR<DocumentCreateWithoutVectorChunksInput, DocumentUncheckedCreateWithoutVectorChunksInput>
     connectOrCreate?: DocumentCreateOrConnectWithoutVectorChunksInput
-    upsert?: DocumentUpsertWithoutVectorChunksInput
-    disconnect?: DocumentWhereInput | boolean
-    delete?: DocumentWhereInput | boolean
     connect?: DocumentWhereUniqueInput
-    update?: XOR<XOR<DocumentUpdateToOneWithWhereWithoutVectorChunksInput, DocumentUpdateWithoutVectorChunksInput>, DocumentUncheckedUpdateWithoutVectorChunksInput>
   }
 
   export type GitHubRepositoryUpdateOneWithoutVectorChunksNestedInput = {
@@ -11774,6 +11634,16 @@ export namespace Prisma {
     delete?: GitHubRepositoryWhereInput | boolean
     connect?: GitHubRepositoryWhereUniqueInput
     update?: XOR<XOR<GitHubRepositoryUpdateToOneWithWhereWithoutVectorChunksInput, GitHubRepositoryUpdateWithoutVectorChunksInput>, GitHubRepositoryUncheckedUpdateWithoutVectorChunksInput>
+  }
+
+  export type DocumentUpdateOneWithoutVectorChunksNestedInput = {
+    create?: XOR<DocumentCreateWithoutVectorChunksInput, DocumentUncheckedCreateWithoutVectorChunksInput>
+    connectOrCreate?: DocumentCreateOrConnectWithoutVectorChunksInput
+    upsert?: DocumentUpsertWithoutVectorChunksInput
+    disconnect?: DocumentWhereInput | boolean
+    delete?: DocumentWhereInput | boolean
+    connect?: DocumentWhereUniqueInput
+    update?: XOR<XOR<DocumentUpdateToOneWithWhereWithoutVectorChunksInput, DocumentUpdateWithoutVectorChunksInput>, DocumentUncheckedUpdateWithoutVectorChunksInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -11916,30 +11786,6 @@ export namespace Prisma {
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
-  export type NestedEnumMessageRoleFilter<$PrismaModel = never> = {
-    equals?: $Enums.MessageRole | EnumMessageRoleFieldRefInput<$PrismaModel>
-    in?: $Enums.MessageRole[]
-    notIn?: $Enums.MessageRole[]
-    not?: NestedEnumMessageRoleFilter<$PrismaModel> | $Enums.MessageRole
-  }
-
-  export type NestedEnumMessageRoleWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.MessageRole | EnumMessageRoleFieldRefInput<$PrismaModel>
-    in?: $Enums.MessageRole[]
-    notIn?: $Enums.MessageRole[]
-    not?: NestedEnumMessageRoleWithAggregatesFilter<$PrismaModel> | $Enums.MessageRole
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumMessageRoleFilter<$PrismaModel>
-    _max?: NestedEnumMessageRoleFilter<$PrismaModel>
-  }
-
-  export type NestedEnumDocStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.DocStatus | EnumDocStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.DocStatus[]
-    notIn?: $Enums.DocStatus[]
-    not?: NestedEnumDocStatusFilter<$PrismaModel> | $Enums.DocStatus
-  }
-
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[]
@@ -11967,16 +11813,6 @@ export namespace Prisma {
     not?: NestedFloatFilter<$PrismaModel> | number
   }
 
-  export type NestedEnumDocStatusWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.DocStatus | EnumDocStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.DocStatus[]
-    notIn?: $Enums.DocStatus[]
-    not?: NestedEnumDocStatusWithAggregatesFilter<$PrismaModel> | $Enums.DocStatus
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumDocStatusFilter<$PrismaModel>
-    _max?: NestedEnumDocStatusFilter<$PrismaModel>
-  }
-
   export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
     in?: Date[] | string[] | null
@@ -11986,13 +11822,6 @@ export namespace Prisma {
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
-  }
-
-  export type NestedEnumRepoStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.RepoStatus | EnumRepoStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.RepoStatus[]
-    notIn?: $Enums.RepoStatus[]
-    not?: NestedEnumRepoStatusFilter<$PrismaModel> | $Enums.RepoStatus
   }
 
   export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -12007,16 +11836,6 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedDateTimeNullableFilter<$PrismaModel>
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
-  }
-
-  export type NestedEnumRepoStatusWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.RepoStatus | EnumRepoStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.RepoStatus[]
-    notIn?: $Enums.RepoStatus[]
-    not?: NestedEnumRepoStatusWithAggregatesFilter<$PrismaModel> | $Enums.RepoStatus
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumRepoStatusFilter<$PrismaModel>
-    _max?: NestedEnumRepoStatusFilter<$PrismaModel>
   }
 
   export type ChatSessionCreateWithoutUserInput = {
@@ -12057,7 +11876,7 @@ export namespace Prisma {
     content?: string | null
     extractedText?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
-    status?: $Enums.DocStatus
+    status?: string
     uploadPath?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -12073,7 +11892,7 @@ export namespace Prisma {
     content?: string | null
     extractedText?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
-    status?: $Enums.DocStatus
+    status?: string
     uploadPath?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -12095,7 +11914,7 @@ export namespace Prisma {
     repoName: string
     branch?: string
     lastSyncAt?: Date | string | null
-    status?: $Enums.RepoStatus
+    status?: string
     metadata?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -12108,7 +11927,7 @@ export namespace Prisma {
     repoName: string
     branch?: string
     lastSyncAt?: Date | string | null
-    status?: $Enums.RepoStatus
+    status?: string
     metadata?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -12182,7 +12001,7 @@ export namespace Prisma {
     content?: StringNullableFilter<"Document"> | string | null
     extractedText?: StringNullableFilter<"Document"> | string | null
     metadata?: JsonNullableFilter<"Document">
-    status?: EnumDocStatusFilter<"Document"> | $Enums.DocStatus
+    status?: StringFilter<"Document"> | string
     uploadPath?: StringNullableFilter<"Document"> | string | null
     createdAt?: DateTimeFilter<"Document"> | Date | string
     updatedAt?: DateTimeFilter<"Document"> | Date | string
@@ -12214,7 +12033,7 @@ export namespace Prisma {
     repoName?: StringFilter<"GitHubRepository"> | string
     branch?: StringFilter<"GitHubRepository"> | string
     lastSyncAt?: DateTimeNullableFilter<"GitHubRepository"> | Date | string | null
-    status?: EnumRepoStatusFilter<"GitHubRepository"> | $Enums.RepoStatus
+    status?: StringFilter<"GitHubRepository"> | string
     metadata?: JsonNullableFilter<"GitHubRepository">
     createdAt?: DateTimeFilter<"GitHubRepository"> | Date | string
     updatedAt?: DateTimeFilter<"GitHubRepository"> | Date | string
@@ -12249,7 +12068,7 @@ export namespace Prisma {
 
   export type MessageCreateWithoutSessionInput = {
     id?: string
-    role: $Enums.MessageRole
+    role: string
     content: string
     metadata?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
@@ -12257,7 +12076,7 @@ export namespace Prisma {
 
   export type MessageUncheckedCreateWithoutSessionInput = {
     id?: string
-    role: $Enums.MessageRole
+    role: string
     content: string
     metadata?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
@@ -12327,7 +12146,7 @@ export namespace Prisma {
     NOT?: MessageScalarWhereInput | MessageScalarWhereInput[]
     id?: StringFilter<"Message"> | string
     sessionId?: StringFilter<"Message"> | string
-    role?: EnumMessageRoleFilter<"Message"> | $Enums.MessageRole
+    role?: StringFilter<"Message"> | string
     content?: StringFilter<"Message"> | string
     metadata?: JsonNullableFilter<"Message">
     createdAt?: DateTimeFilter<"Message"> | Date | string
@@ -12618,6 +12437,37 @@ export namespace Prisma {
     data: XOR<VectorChunkUpdateManyMutationInput, VectorChunkUncheckedUpdateManyWithoutRepositoryInput>
   }
 
+  export type GitHubRepositoryCreateWithoutVectorChunksInput = {
+    id?: string
+    repoUrl: string
+    repoName: string
+    branch?: string
+    lastSyncAt?: Date | string | null
+    status?: string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user?: UserCreateNestedOneWithoutRepositoriesInput
+  }
+
+  export type GitHubRepositoryUncheckedCreateWithoutVectorChunksInput = {
+    id?: string
+    userId?: string | null
+    repoUrl: string
+    repoName: string
+    branch?: string
+    lastSyncAt?: Date | string | null
+    status?: string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type GitHubRepositoryCreateOrConnectWithoutVectorChunksInput = {
+    where: GitHubRepositoryWhereUniqueInput
+    create: XOR<GitHubRepositoryCreateWithoutVectorChunksInput, GitHubRepositoryUncheckedCreateWithoutVectorChunksInput>
+  }
+
   export type DocumentCreateWithoutVectorChunksInput = {
     id?: string
     filename: string
@@ -12627,7 +12477,7 @@ export namespace Prisma {
     content?: string | null
     extractedText?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
-    status?: $Enums.DocStatus
+    status?: string
     uploadPath?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -12644,7 +12494,7 @@ export namespace Prisma {
     content?: string | null
     extractedText?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
-    status?: $Enums.DocStatus
+    status?: string
     uploadPath?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -12655,35 +12505,41 @@ export namespace Prisma {
     create: XOR<DocumentCreateWithoutVectorChunksInput, DocumentUncheckedCreateWithoutVectorChunksInput>
   }
 
-  export type GitHubRepositoryCreateWithoutVectorChunksInput = {
-    id?: string
-    repoUrl: string
-    repoName: string
-    branch?: string
-    lastSyncAt?: Date | string | null
-    status?: $Enums.RepoStatus
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    user?: UserCreateNestedOneWithoutRepositoriesInput
-  }
-
-  export type GitHubRepositoryUncheckedCreateWithoutVectorChunksInput = {
-    id?: string
-    userId?: string | null
-    repoUrl: string
-    repoName: string
-    branch?: string
-    lastSyncAt?: Date | string | null
-    status?: $Enums.RepoStatus
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type GitHubRepositoryCreateOrConnectWithoutVectorChunksInput = {
-    where: GitHubRepositoryWhereUniqueInput
+  export type GitHubRepositoryUpsertWithoutVectorChunksInput = {
+    update: XOR<GitHubRepositoryUpdateWithoutVectorChunksInput, GitHubRepositoryUncheckedUpdateWithoutVectorChunksInput>
     create: XOR<GitHubRepositoryCreateWithoutVectorChunksInput, GitHubRepositoryUncheckedCreateWithoutVectorChunksInput>
+    where?: GitHubRepositoryWhereInput
+  }
+
+  export type GitHubRepositoryUpdateToOneWithWhereWithoutVectorChunksInput = {
+    where?: GitHubRepositoryWhereInput
+    data: XOR<GitHubRepositoryUpdateWithoutVectorChunksInput, GitHubRepositoryUncheckedUpdateWithoutVectorChunksInput>
+  }
+
+  export type GitHubRepositoryUpdateWithoutVectorChunksInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    repoUrl?: StringFieldUpdateOperationsInput | string
+    repoName?: StringFieldUpdateOperationsInput | string
+    branch?: StringFieldUpdateOperationsInput | string
+    lastSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneWithoutRepositoriesNestedInput
+  }
+
+  export type GitHubRepositoryUncheckedUpdateWithoutVectorChunksInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    repoUrl?: StringFieldUpdateOperationsInput | string
+    repoName?: StringFieldUpdateOperationsInput | string
+    branch?: StringFieldUpdateOperationsInput | string
+    lastSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type DocumentUpsertWithoutVectorChunksInput = {
@@ -12706,7 +12562,7 @@ export namespace Prisma {
     content?: NullableStringFieldUpdateOperationsInput | string | null
     extractedText?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
-    status?: EnumDocStatusFieldUpdateOperationsInput | $Enums.DocStatus
+    status?: StringFieldUpdateOperationsInput | string
     uploadPath?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -12723,45 +12579,8 @@ export namespace Prisma {
     content?: NullableStringFieldUpdateOperationsInput | string | null
     extractedText?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
-    status?: EnumDocStatusFieldUpdateOperationsInput | $Enums.DocStatus
+    status?: StringFieldUpdateOperationsInput | string
     uploadPath?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type GitHubRepositoryUpsertWithoutVectorChunksInput = {
-    update: XOR<GitHubRepositoryUpdateWithoutVectorChunksInput, GitHubRepositoryUncheckedUpdateWithoutVectorChunksInput>
-    create: XOR<GitHubRepositoryCreateWithoutVectorChunksInput, GitHubRepositoryUncheckedCreateWithoutVectorChunksInput>
-    where?: GitHubRepositoryWhereInput
-  }
-
-  export type GitHubRepositoryUpdateToOneWithWhereWithoutVectorChunksInput = {
-    where?: GitHubRepositoryWhereInput
-    data: XOR<GitHubRepositoryUpdateWithoutVectorChunksInput, GitHubRepositoryUncheckedUpdateWithoutVectorChunksInput>
-  }
-
-  export type GitHubRepositoryUpdateWithoutVectorChunksInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    repoUrl?: StringFieldUpdateOperationsInput | string
-    repoName?: StringFieldUpdateOperationsInput | string
-    branch?: StringFieldUpdateOperationsInput | string
-    lastSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: EnumRepoStatusFieldUpdateOperationsInput | $Enums.RepoStatus
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneWithoutRepositoriesNestedInput
-  }
-
-  export type GitHubRepositoryUncheckedUpdateWithoutVectorChunksInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    userId?: NullableStringFieldUpdateOperationsInput | string | null
-    repoUrl?: StringFieldUpdateOperationsInput | string
-    repoName?: StringFieldUpdateOperationsInput | string
-    branch?: StringFieldUpdateOperationsInput | string
-    lastSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: EnumRepoStatusFieldUpdateOperationsInput | $Enums.RepoStatus
-    metadata?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -12784,7 +12603,7 @@ export namespace Prisma {
     content?: string | null
     extractedText?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
-    status?: $Enums.DocStatus
+    status?: string
     uploadPath?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -12796,7 +12615,7 @@ export namespace Prisma {
     repoName: string
     branch?: string
     lastSyncAt?: Date | string | null
-    status?: $Enums.RepoStatus
+    status?: string
     metadata?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -12840,7 +12659,7 @@ export namespace Prisma {
     content?: NullableStringFieldUpdateOperationsInput | string | null
     extractedText?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
-    status?: EnumDocStatusFieldUpdateOperationsInput | $Enums.DocStatus
+    status?: StringFieldUpdateOperationsInput | string
     uploadPath?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -12856,7 +12675,7 @@ export namespace Prisma {
     content?: NullableStringFieldUpdateOperationsInput | string | null
     extractedText?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
-    status?: EnumDocStatusFieldUpdateOperationsInput | $Enums.DocStatus
+    status?: StringFieldUpdateOperationsInput | string
     uploadPath?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -12872,7 +12691,7 @@ export namespace Prisma {
     content?: NullableStringFieldUpdateOperationsInput | string | null
     extractedText?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
-    status?: EnumDocStatusFieldUpdateOperationsInput | $Enums.DocStatus
+    status?: StringFieldUpdateOperationsInput | string
     uploadPath?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -12884,7 +12703,7 @@ export namespace Prisma {
     repoName?: StringFieldUpdateOperationsInput | string
     branch?: StringFieldUpdateOperationsInput | string
     lastSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: EnumRepoStatusFieldUpdateOperationsInput | $Enums.RepoStatus
+    status?: StringFieldUpdateOperationsInput | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -12897,7 +12716,7 @@ export namespace Prisma {
     repoName?: StringFieldUpdateOperationsInput | string
     branch?: StringFieldUpdateOperationsInput | string
     lastSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: EnumRepoStatusFieldUpdateOperationsInput | $Enums.RepoStatus
+    status?: StringFieldUpdateOperationsInput | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -12910,7 +12729,7 @@ export namespace Prisma {
     repoName?: StringFieldUpdateOperationsInput | string
     branch?: StringFieldUpdateOperationsInput | string
     lastSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: EnumRepoStatusFieldUpdateOperationsInput | $Enums.RepoStatus
+    status?: StringFieldUpdateOperationsInput | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -12918,7 +12737,7 @@ export namespace Prisma {
 
   export type MessageCreateManySessionInput = {
     id?: string
-    role: $Enums.MessageRole
+    role: string
     content: string
     metadata?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
@@ -12926,7 +12745,7 @@ export namespace Prisma {
 
   export type MessageUpdateWithoutSessionInput = {
     id?: StringFieldUpdateOperationsInput | string
-    role?: EnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole
+    role?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -12934,7 +12753,7 @@ export namespace Prisma {
 
   export type MessageUncheckedUpdateWithoutSessionInput = {
     id?: StringFieldUpdateOperationsInput | string
-    role?: EnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole
+    role?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -12942,7 +12761,7 @@ export namespace Prisma {
 
   export type MessageUncheckedUpdateManyWithoutSessionInput = {
     id?: StringFieldUpdateOperationsInput | string
-    role?: EnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole
+    role?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string

@@ -1,0 +1,807 @@
+{
+  "info": {
+    "name": "Enhanced MCP ChatBot API",
+    "description": "Complete collection of API requests for testing MCP ChatBot functionality",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "File Operations",
+      "item": [
+        {
+          "name": "Read File - Package.json",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"read file package.json\",\n  \"enableFileOperations\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/enhanced-chatbot",
+              "host": ["{{baseUrl}}"],
+              "path": ["enhanced-chatbot"]
+            }
+          }
+        },
+        {
+          "name": "Read File - README",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"show me the content of readme.md\",\n  \"enableFileOperations\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/enhanced-chatbot",
+              "host": ["{{baseUrl}}"],
+              "path": ["enhanced-chatbot"]
+            }
+          }
+        },
+        {
+          "name": "Write File - Simple Text",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"write file tmp/test.txt content \\\"Hello World from API test!\\\"\",\n  \"enableFileOperations\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/enhanced-chatbot",
+              "host": ["{{baseUrl}}"],
+              "path": ["enhanced-chatbot"]
+            }
+          }
+        },
+        {
+          "name": "Write File - JSON Content",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"create file tmp/config.json content \\\"{\\\\\\\"debug\\\\\\\": true, \\\\\\\"port\\\\\\\": 3000}\\\"\",\n  \"enableFileOperations\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/enhanced-chatbot",
+              "host": ["{{baseUrl}}"],
+              "path": ["enhanced-chatbot"]
+            }
+          }
+        },
+        {
+          "name": "Write File - Markdown",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"write file tmp/notes.md content \\\"# Test Notes\\\\n\\\\nThis is a test file created via API.\\\"\",\n  \"enableFileOperations\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/enhanced-chatbot",
+              "host": ["{{baseUrl}}"],
+              "path": ["enhanced-chatbot"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Directory Operations",
+      "item": [
+        {
+          "name": "List Files - Source Directory",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"list files in src directory\",\n  \"enableFileOperations\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/enhanced-chatbot",
+              "host": ["{{baseUrl}}"],
+              "path": ["enhanced-chatbot"]
+            }
+          }
+        },
+        {
+          "name": "List Files - Root Directory",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"show me files in the current directory\",\n  \"enableFileOperations\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/enhanced-chatbot",
+              "host": ["{{baseUrl}}"],
+              "path": ["enhanced-chatbot"]
+            }
+          }
+        },
+        {
+          "name": "List Files - Functions Directory",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"list files in src/functions folder\",\n  \"enableFileOperations\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/enhanced-chatbot",
+              "host": ["{{baseUrl}}"],
+              "path": ["enhanced-chatbot"]
+            }
+          }
+        },
+        {
+          "name": "List Files - Temp Directory",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"show files in tmp directory\",\n  \"enableFileOperations\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/enhanced-chatbot",
+              "host": ["{{baseUrl}}"],
+              "path": ["enhanced-chatbot"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Advanced Operations",
+      "item": [
+        {
+          "name": "Multiple Operations - List and Read",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"list files in src directory and read src/index.ts\",\n  \"enableFileOperations\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/enhanced-chatbot",
+              "host": ["{{baseUrl}}"],
+              "path": ["enhanced-chatbot"]
+            }
+          }
+        },
+        {
+          "name": "Command Conversion - LS",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"execute command ls -la\",\n  \"enableFileOperations\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/enhanced-chatbot",
+              "host": ["{{baseUrl}}"],
+              "path": ["enhanced-chatbot"]
+            }
+          }
+        },
+        {
+          "name": "Command Conversion - Cat",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"execute cat package.json\",\n  \"enableFileOperations\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/enhanced-chatbot",
+              "host": ["{{baseUrl}}"],
+              "path": ["enhanced-chatbot"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "GitHub Operations",
+      "item": [
+        {
+          "name": "List My Repositories",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"list my repositories\",\n  \"enableExternalMCP\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/enhanced-chatbot",
+              "host": ["{{baseUrl}}"],
+              "path": ["enhanced-chatbot"]
+            }
+          }
+        },
+        {
+          "name": "Get Repository Info",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"get repository Sanskary2303/Chaitanya\",\n  \"enableExternalMCP\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/enhanced-chatbot",
+              "host": ["{{baseUrl}}"],
+              "path": ["enhanced-chatbot"]
+            }
+          }
+        },
+        {
+          "name": "List Issues",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"list issues in Sanskary2303/Chaitanya\",\n  \"enableExternalMCP\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/enhanced-chatbot",
+              "host": ["{{baseUrl}}"],
+              "path": ["enhanced-chatbot"]
+            }
+          }
+        },
+        {
+          "name": "Create Issue",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"create issue title \\\"Test Issue\\\" body \\\"This is a test issue created via API\\\" in Sanskary2303/Chaitanya\",\n  \"enableExternalMCP\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/enhanced-chatbot",
+              "host": ["{{baseUrl}}"],
+              "path": ["enhanced-chatbot"]
+            }
+          }
+        },
+        {
+          "name": "List Pull Requests",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"list pull requests in Sanskary2303/Chaitanya\",\n  \"enableExternalMCP\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/enhanced-chatbot",
+              "host": ["{{baseUrl}}"],
+              "path": ["enhanced-chatbot"]
+            }
+          }
+        },
+        {
+          "name": "Get File from GitHub",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"get file package.json from Sanskary2303/Chaitanya\",\n  \"enableExternalMCP\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/enhanced-chatbot",
+              "host": ["{{baseUrl}}"],
+              "path": ["enhanced-chatbot"]
+            }
+          }
+        },
+        {
+          "name": "List Branches",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"list branches in Sanskary2303/Chaitanya\",\n  \"enableExternalMCP\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/enhanced-chatbot",
+              "host": ["{{baseUrl}}"],
+              "path": ["enhanced-chatbot"]
+            }
+          }
+        },
+        {
+          "name": "List Commits",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"list commits in Sanskary2303/Chaitanya\",\n  \"enableExternalMCP\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/enhanced-chatbot",
+              "host": ["{{baseUrl}}"],
+              "path": ["enhanced-chatbot"]
+            }
+          }
+        },
+        {
+          "name": "Get User Info",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"get user info\",\n  \"enableExternalMCP\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/enhanced-chatbot",
+              "host": ["{{baseUrl}}"],
+              "path": ["enhanced-chatbot"]
+            }
+          }
+        },
+        {
+          "name": "Search Repositories",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"search repositories for \\\"machine learning\\\"\",\n  \"enableExternalMCP\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/enhanced-chatbot",
+              "host": ["{{baseUrl}}"],
+              "path": ["enhanced-chatbot"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Configuration Tests",
+      "item": [
+        {
+          "name": "With Debug Mode",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"read file package.json\",\n  \"enableFileOperations\": true,\n  \"debug\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/enhanced-chatbot",
+              "host": ["{{baseUrl}}"],
+              "path": ["enhanced-chatbot"]
+            }
+          }
+        },
+        {
+          "name": "With Custom Working Directory",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"list files in current directory\",\n  \"enableFileOperations\": true,\n  \"workingDirectory\": \"/home/sanskar/Chaitanya/src\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/enhanced-chatbot",
+              "host": ["{{baseUrl}}"],
+              "path": ["enhanced-chatbot"]
+            }
+          }
+        },
+        {
+          "name": "With Output Length Limit",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"read file readme.md\",\n  \"enableFileOperations\": true,\n  \"maxOutputLength\": 1000\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/enhanced-chatbot",
+              "host": ["{{baseUrl}}"],
+              "path": ["enhanced-chatbot"]
+            }
+          }
+        },
+        {
+          "name": "File Operations Disabled",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"what is this project about?\",\n  \"enableFileOperations\": false\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/enhanced-chatbot",
+              "host": ["{{baseUrl}}"],
+              "path": ["enhanced-chatbot"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Natural Language Variations",
+      "item": [
+        {
+          "name": "File Reading - Show Me",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"show me package.json\",\n  \"enableFileOperations\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/enhanced-chatbot",
+              "host": ["{{baseUrl}}"],
+              "path": ["enhanced-chatbot"]
+            }
+          }
+        },
+        {
+          "name": "File Reading - Display Contents",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"display the contents of package.json\",\n  \"enableFileOperations\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/enhanced-chatbot",
+              "host": ["{{baseUrl}}"],
+              "path": ["enhanced-chatbot"]
+            }
+          }
+        },
+        {
+          "name": "File Reading - What Is In",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"what is in package.json file?\",\n  \"enableFileOperations\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/enhanced-chatbot",
+              "host": ["{{baseUrl}}"],
+              "path": ["enhanced-chatbot"]
+            }
+          }
+        },
+        {
+          "name": "Directory Listing - Show What Is In",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"show me what is in src directory\",\n  \"enableFileOperations\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/enhanced-chatbot",
+              "host": ["{{baseUrl}}"],
+              "path": ["enhanced-chatbot"]
+            }
+          }
+        },
+        {
+          "name": "Directory Listing - Contents Of",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"list contents of src folder\",\n  \"enableFileOperations\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/enhanced-chatbot",
+              "host": ["{{baseUrl}}"],
+              "path": ["enhanced-chatbot"]
+            }
+          }
+        },
+        {
+          "name": "File Writing - Create With",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"create file tmp/test2.txt with content \\\"world\\\"\",\n  \"enableFileOperations\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/enhanced-chatbot",
+              "host": ["{{baseUrl}}"],
+              "path": ["enhanced-chatbot"]
+            }
+          }
+        },
+        {
+          "name": "File Writing - Save Content To",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"save content \\\"test data\\\" to file tmp/test3.txt\",\n  \"enableFileOperations\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/enhanced-chatbot",
+              "host": ["{{baseUrl}}"],
+              "path": ["enhanced-chatbot"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Error Handling Tests",
+      "item": [
+        {
+          "name": "Read Non-existent File",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"read file nonexistent.txt\",\n  \"enableFileOperations\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/enhanced-chatbot",
+              "host": ["{{baseUrl}}"],
+              "path": ["enhanced-chatbot"]
+            }
+          }
+        },
+        {
+          "name": "List Non-existent Directory",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"list files in nonexistent_directory\",\n  \"enableFileOperations\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/enhanced-chatbot",
+              "host": ["{{baseUrl}}"],
+              "path": ["enhanced-chatbot"]
+            }
+          }
+        },
+        {
+          "name": "Empty Query",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"\",\n  \"enableFileOperations\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/enhanced-chatbot",
+              "host": ["{{baseUrl}}"],
+              "path": ["enhanced-chatbot"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

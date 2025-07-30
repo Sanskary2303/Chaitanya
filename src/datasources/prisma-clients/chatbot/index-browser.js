@@ -219,25 +219,7 @@ exports.Prisma.QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
 };
-exports.MessageRole = exports.$Enums.MessageRole = {
-  USER: 'USER',
-  ASSISTANT: 'ASSISTANT',
-  SYSTEM: 'SYSTEM'
-};
 
-exports.DocStatus = exports.$Enums.DocStatus = {
-  PROCESSING: 'PROCESSING',
-  COMPLETED: 'COMPLETED',
-  FAILED: 'FAILED'
-};
-
-exports.RepoStatus = exports.$Enums.RepoStatus = {
-  PENDING: 'PENDING',
-  CLONING: 'CLONING',
-  PROCESSING: 'PROCESSING',
-  COMPLETED: 'COMPLETED',
-  FAILED: 'FAILED'
-};
 
 exports.Prisma.ModelName = {
   User: 'User',

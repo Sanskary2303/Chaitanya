@@ -1,0 +1,13 @@
+"mcp.get-file-info":
+  fn: mcp_get_file_info
+  type: tool
+  summary: Get file information
+  description: Get detailed information about a file or directory including size, permissions, and timestamps.
+  body:
+    type: object
+    required:
+      - filePath
+    properties:
+      filePath:
+        type: string
+        description: Path to the file or directory to inspect

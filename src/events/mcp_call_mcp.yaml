@@ -1,0 +1,24 @@
+"mcp.call-mcp":
+  fn: mcp_call_mcp
+  type: tool
+  summary: Call external MCP server
+  description: Make calls to external MCP servers to use their tools and capabilities.
+  body:
+    type: object
+    required:
+      - server
+      - tool
+    properties:
+      server:
+        type: string
+        description: MCP server identifier or endpoint
+      tool:
+        type: string
+        description: Name of the tool to call on the MCP server
+      parameters:
+        type: object
+        description: Parameters to pass to the MCP tool
+      timeout:
+        type: number
+        description: "Request timeout in milliseconds (default: 30000)"
+        default: 30000

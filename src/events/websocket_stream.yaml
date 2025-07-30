@@ -17,4 +17,3 @@ websocket.stream:
             type: string
           sessionId:
             type: [string, "null"]
-

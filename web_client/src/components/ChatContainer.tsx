@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
+import { useAuth } from '@/contexts/AuthContext';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -34,9 +35,15 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   onToggleSidebar,
   isSidebarCollapsed,
 }) => {
+  const { token } = useAuth();
   const [messages, setMessages] = useState<Message[]>([]);
   const [isStreaming, setIsStreaming] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+
+  // Helper function to get auth headers
+  const getAuthHeaders = () => ({
+    ...(token && { 'Authorization': `Bearer ${token}` })
+  });
   const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
   const [isCreatingSession, setIsCreatingSession] = useState(false);
   const [connectionStatus, setConnectionStatus] = useState<
@@ -63,7 +70,9 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   const loadChatHistory = async (sessionId: string) => {
     try {
       console.log('Loading chat history for session:', sessionId);
-      const historyResponse = await axios.get(`${API_URL}/chat-session/${sessionId}/messages`);
+      const historyResponse = await axios.get(`${API_URL}/chat-session/${sessionId}/messages`, {
+        headers: getAuthHeaders()
+      });
       console.log('Raw history response:', historyResponse.data);
       
       let historyMessages: Message[] = [];
@@ -185,6 +194,8 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
       console.log('Creating new chat session...');
       const sessionResponse = await axios.post(`${API_URL}/chat-session`, {
         title: 'New Chat Session'
+      }, {
+        headers: getAuthHeaders()
       });
       console.log('Session creation response:', sessionResponse.data);
       
@@ -328,7 +339,9 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   useEffect(() => {
     const fetchInitialData = async () => {
       try {
-        const docsResponse = await axios.get(`${API_URL}/meta/doc`);
+        const docsResponse = await axios.get(`${API_URL}/meta/doc`, {
+          headers: getAuthHeaders()
+        });
         if (docsResponse.data) {
           const fetchedFiles: UploadedFile[] = docsResponse.data.map((doc: any) => ({
             id: doc.uniqueID,
@@ -342,7 +355,9 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
       }
 
       try {
-        const reposResponse = await axios.get(`${API_URL}/meta/repo`);
+        const reposResponse = await axios.get(`${API_URL}/meta/repo`, {
+          headers: getAuthHeaders()
+        });
         if (reposResponse.data) {
           const fetchedLinks: GitHubLink[] = reposResponse.data.map((repo: any) => ({
             id: repo.repouniqueid,
@@ -494,7 +509,10 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
 
     try {
       const { data } = await axios.post(`${API_URL}/upload_docs`, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
+        headers: { 
+          'Content-Type': 'multipart/form-data',
+          ...(token && { 'Authorization': `Bearer ${token}` })
+        },
         onUploadProgress: (e) => {
           const percent = Math.round((e.loaded * 100) / e.total);
           console.log(`Uploading files: ${percent}%`);
@@ -536,7 +554,9 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
     });
 
     try {
-      const response = await axios.post(`${API_URL}/upload_github`, {  id: tempId, github_url: url, branch });
+      const response = await axios.post(`${API_URL}/upload_github`, {  id: tempId, github_url: url, branch }, {
+        headers: getAuthHeaders()
+      });
       const { id } = response.data;
       setPendingGithubLinks((prev) => prev.filter((link) => link.id !== tempId));
       setGithubLinks((prev) => [...prev, { ...newLink, id, status: 'completed' }]);
@@ -580,6 +600,8 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
     try {
       await axios.post(`${API_URL}/prompt/update`, {
         message: newContent,
+      }, {
+        headers: getAuthHeaders()
       });
     } catch (err) {
       console.error('Prompt update failed:', err);
@@ -620,7 +642,9 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
       duration: 10000,
     });
     try {
-      const response = await axios.post(`${API_URL}/sync/github/${linkId}`);
+      const response = await axios.post(`${API_URL}/sync/github/${linkId}`, {}, {
+        headers: getAuthHeaders()
+      });
       toast.custom((t) => <CustomToast id={t} message={response.data.message || 'Repository synced successfully.'} type="success" />, {
         duration: 10000,
       });
@@ -641,13 +665,17 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
 
     try {
       if (type === 'file') {
-        const response = await axios.delete(`${API_URL}/doc/${id}`);
+        const response = await axios.delete(`${API_URL}/doc/${id}`, {
+          headers: getAuthHeaders()
+        });
         setUploadedFiles((prev) => prev.filter((f) => f.id !== id));
         toast.custom((t) => <CustomToast id={t} message={response.data.message || 'File deleted successfully.'} type="success" />, {
           duration: 10000,
         });
       } else if (type === 'github') {
-        const response = await axios.delete(`${API_URL}/github_links/${id}`);
+        const response = await axios.delete(`${API_URL}/github_links/${id}`, {
+          headers: getAuthHeaders()
+        });
         setGithubLinks((prev) => prev.filter((l) => l.id !== id));
         toast.custom((t) => <CustomToast id={t} message={response.data.message || 'GitHub link deleted successfully.'} type="success" />, {
           duration: 10000,

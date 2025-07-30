@@ -1,0 +1,37 @@
+http.post./github-mcp-client:
+  fn: enhanced_github_mcp.manageGitHubMCPClient
+  description: Manage GitHub MCP client connections
+  summary: Connect, disconnect, and list GitHub MCP client connections
+  body:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            action:
+              type: string
+              enum: [connect, disconnect, list]
+              description: Action to perform
+            clientName:
+              type: string
+              description: Name of the client (for connect/disconnect)
+            serverType:
+              type: string
+              enum: [official, custom, python]
+              description: Type of GitHub MCP server
+              default: official
+          required:
+            - action
+  responses:
+    200:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              data:
+                type: object
+              message:
+                type: string
