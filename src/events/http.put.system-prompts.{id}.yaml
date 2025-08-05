@@ -1,0 +1,47 @@
+http:
+  put: /system-prompts/{id}
+summary: Update system prompt
+description: Update an existing system prompt
+fn: prompt_management.update_system_prompt
+params:
+  - name: id
+    in: path
+    required: true
+    schema:
+      type: string
+    description: ID of the prompt to update
+body:
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          name:
+            type: string
+          description:
+            type: string
+          coreSystemPrompt:
+            type: string
+          toolKnowledgePrompt:
+            type: string
+          category:
+            type: string
+          tags:
+            type: array
+            items:
+              type: string
+          version:
+            type: string
+          isDefault:
+            type: boolean
+          isActive:
+            type: boolean
+responses:
+  200:
+    description: System prompt updated successfully
+  404:
+    description: Prompt not found
+  409:
+    description: Name conflict
+  500:
+    description: Internal server error

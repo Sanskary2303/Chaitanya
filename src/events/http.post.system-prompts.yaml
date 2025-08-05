@@ -1,0 +1,62 @@
+http:
+  post: /system-prompts
+summary: Create a new system prompt
+description: Create a new system prompt with specified parameters
+fn: prompt_management.create_system_prompt
+body:
+  content:
+    application/json:
+      schema:
+        type: object
+        required:
+          - name
+          - coreSystemPrompt
+          - toolKnowledgePrompt
+        properties:
+          name:
+            type: string
+            description: Unique name for the system prompt
+            example: "Enhanced GitHub Assistant"
+          description:
+            type: string
+            description: Description of the prompt's purpose
+            example: "Advanced prompt for GitHub operations with document search"
+          coreSystemPrompt:
+            type: string
+            description: Main system prompt content
+          toolKnowledgePrompt:
+            type: string
+            description: Tool-specific knowledge and instructions
+          category:
+            type: string
+            description: Category for organizing prompts
+            default: "general"
+          tags:
+            type: array
+            items:
+              type: string
+            description: Tags for categorization
+          version:
+            type: string
+            description: Version identifier
+            default: "1.0.0"
+          createdBy:
+            type: string
+            description: Creator identifier
+          isDefault:
+            type: boolean
+            description: Whether this should be the default prompt
+            default: false
+          isActive:
+            type: boolean
+            description: Whether this prompt is active
+            default: true
+responses:
+  201:
+    description: System prompt created successfully
+  400:
+    description: Missing required fields
+  409:
+    description: Prompt name already exists
+  500:
+    description: Internal server error

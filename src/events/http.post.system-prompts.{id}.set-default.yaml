@@ -1,0 +1,19 @@
+http:
+  post: /system-prompts/{id}/set-default
+summary: Set default system prompt
+description: Set a specific system prompt as the default
+fn: prompt_management.set_default_prompt
+params:
+  - name: id
+    in: path
+    required: true
+    schema:
+      type: string
+    description: ID of the prompt to set as default
+responses:
+  200:
+    description: Default prompt updated successfully
+  404:
+    description: Prompt not found
+  500:
+    description: Internal server error

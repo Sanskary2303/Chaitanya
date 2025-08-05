@@ -1,5 +1,5 @@
 websocket.stream:
-  fn: stream_gemini
+  fn: enhanced_mcp_chatbot
   schema:
     type: object
     required:
@@ -17,3 +17,7 @@ websocket.stream:
             type: string
           sessionId:
             type: [string, "null"]
+          mode:
+            type: string
+      clientId:
+        type: string

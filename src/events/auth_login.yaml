@@ -1,24 +1,24 @@
 http.post./auth/login:
+  summary: User login
+  description: Authenticate user with username/email and password
   fn: auth_login
   body:
     content:
       application/json:
         schema:
           type: object
-          required:
-            - username
-            - password
           properties:
             username:
               type: string
-              description: Username or email
+              description: Username or email address
             password:
               type: string
               description: User password
-          additionalProperties: false
+          required:
+            - username
+            - password
   responses:
     200:
-      description: Login successful
       content:
         application/json:
           schema:
@@ -26,6 +26,8 @@ http.post./auth/login:
             properties:
               success:
                 type: boolean
+              code:
+                type: integer
               message:
                 type: string
               data:
@@ -48,7 +50,6 @@ http.post./auth/login:
                   expiresIn:
                     type: string
     400:
-      description: Bad request
       content:
         application/json:
           schema:
@@ -56,12 +57,13 @@ http.post./auth/login:
             properties:
               success:
                 type: boolean
-              error:
-                type: string
+              code:
+                type: integer
               message:
                 type: string
+              data:
+                type: object
     401:
-      description: Invalid credentials
       content:
         application/json:
           schema:
@@ -69,7 +71,9 @@ http.post./auth/login:
             properties:
               success:
                 type: boolean
-              error:
-                type: string
+              code:
+                type: integer
               message:
                 type: string
+              data:
+                type: object

@@ -46,7 +46,7 @@ export default async function (ctx: GSContext, args: PlainObject): Promise<GSSta
   } catch (error: any) {
     return new GSStatus(false, 500, 'Internal server error', {
       error: 'INTERNAL_ERROR',
-      message: error.message,
+      message: error.message || 'Something went wrong',
     });
   }
 }

@@ -188,8 +188,17 @@ exports.Prisma.VectorChunkScalarFieldEnum = {
 
 exports.Prisma.SystemPromptScalarFieldEnum = {
   id: 'id',
-  content: 'content',
+  name: 'name',
+  description: 'description',
+  coreSystemPrompt: 'coreSystemPrompt',
+  toolKnowledgePrompt: 'toolKnowledgePrompt',
   isActive: 'isActive',
+  isDefault: 'isDefault',
+  category: 'category',
+  tags: 'tags',
+  version: 'version',
+  createdBy: 'createdBy',
+  metadata: 'metadata',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };

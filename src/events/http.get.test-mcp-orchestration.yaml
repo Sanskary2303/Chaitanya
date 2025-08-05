@@ -1,0 +1,10 @@
+http.get./test-mcp-orchestration:
+  summary: Test MCP Orchestration
+  description: Test endpoint for MCP server orchestration and multi-server task execution
+  fn: test_mcp_orchestration
+  responses:
+    200:
+      content:
+        application/json:
+          schema:
+            type: object

@@ -202,9 +202,24 @@ export default async function stream_gemini(ctx: GSContext): Promise<GSStatus> {
 
   const threadId = clientId;
 
-  // Get the latest system prompt
-  const { core_system_prompt, tool_knowledge_prompt } = getPrompts();
-  const newSystemPromptText = `${core_system_prompt}\n${tool_knowledge_prompt}`;
+  // Initialize variables
+  let messagesForStream: BaseMessage[] = [];
+  let systemPromptForStream: string | undefined;
+  let newSystemPromptText: string;
+  let existingMessages: any[] = [];
+  let existingSystemPrompt: string = '';
+
+  // Get the latest system prompt from database
+  try {
+    const promptData = await getPrompts();
+    newSystemPromptText = `${promptData.core_system_prompt}\n${promptData.tool_knowledge_prompt}`;
+    
+    console.log(`[${new Date().toISOString()}] Using system prompt: ${promptData.promptName} v${promptData.version} (source: ${promptData.source})`);
+  } catch (promptError) {
+    console.error('Error loading system prompt, using fallback:', promptError);
+    // Fallback to basic prompt
+    newSystemPromptText = 'You are a helpful AI assistant with enhanced capabilities.';
+  }
 
   // Get the current state for the thread
   const currentState = await runnable.getState({
@@ -213,11 +228,8 @@ export default async function stream_gemini(ctx: GSContext): Promise<GSStatus> {
     },
   });
 
-  const existingMessages = currentState?.values?.messages ?? [];
-  const existingSystemPrompt = currentState?.values?.systemPrompt ?? '';
-  
-  let messagesForStream: BaseMessage[] = [];
-  let systemPromptForStream: string | undefined;
+  existingMessages = currentState?.values?.messages ?? [];
+  existingSystemPrompt = currentState?.values?.systemPrompt ?? '';
 
   // Check if this is a new conversation or if system prompt needs update
   if (existingMessages.length === 0) {

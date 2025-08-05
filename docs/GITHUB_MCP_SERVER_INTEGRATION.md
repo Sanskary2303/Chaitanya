@@ -139,6 +139,10 @@ curl -X POST http://localhost:3000/github-mcp-client \
     "action": "connect",
     "serverType": "official",
     "clientName": "github-work"
+  }'curl -X POST http://localhost:3000/github-mcp-client \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "action": "list"
   }'
 
 curl -X POST http://localhost:3000/github-mcp-client \

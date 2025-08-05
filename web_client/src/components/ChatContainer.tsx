@@ -468,7 +468,19 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
 
   const sendEvent = (eventtype: string, payload: Record<string, any> = {}) => {
     if (wsRef.current?.readyState === WebSocket.OPEN) {
-      wsRef.current.send(JSON.stringify({ eventtype, payload }));
+      // Add clientId and ensure mode is included for stream events
+      const enhancedPayload = eventtype === 'websocket.stream' ? {
+        ...payload,
+        mode: payload.mode || 'enhanced' // Default to enhanced mode for GitHub MCP
+      } : payload;
+      
+      const message = {
+        eventtype,
+        payload: enhancedPayload,
+        clientId: `web-client-${Date.now()}` // Add clientId for all events
+      };
+      
+      wsRef.current.send(JSON.stringify(message));
     } else {
       console.warn('WebSocket not connected');
     }

@@ -3,16 +3,17 @@ import { requireAuth, getUserById } from '../helper/auth';
 
 export default async function (ctx: GSContext, args: PlainObject): Promise<GSStatus> {
   try {
-    // Check authentication
+    // Check authentication first
     const authResult = requireAuth(ctx);
     if (authResult) {
       return authResult;
     }
 
-    // Get user from token data
-    const userFromToken = ctx.inputs.data.user;
-    const user = getUserById(userFromToken.userId);
-
+    // Get user info from the JWT token (attached by requireAuth)
+    const userInfo = (ctx as any).user;
+    
+    // Fetch full user details
+    const user = getUserById(userInfo.id);
     if (!user) {
       return new GSStatus(false, 404, 'User not found', {
         error: 'USER_NOT_FOUND',
@@ -28,15 +29,15 @@ export default async function (ctx: GSContext, args: PlainObject): Promise<GSSta
           username: user.username,
           email: user.email,
           role: user.role,
-          createdAt: user.createdAt,
-          updatedAt: user.updatedAt,
+          createdAt: user.createdAt.toISOString(),
+          updatedAt: user.updatedAt.toISOString(),
         },
       },
     });
   } catch (error: any) {
     return new GSStatus(false, 500, 'Internal server error', {
       error: 'INTERNAL_ERROR',
-      message: error.message,
+      message: error.message || 'Something went wrong',
     });
   }
 }

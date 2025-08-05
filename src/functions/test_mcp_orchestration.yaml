@@ -1,0 +1,47 @@
+summary: Test MCP Orchestration
+description: Test endpoint for MCP server orchestration and multi-server task execution
+tasks:
+  - id: test_mcp_orchestration
+    fn: test_mcp_orchestration
+responses:
+  200:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            success:
+              type: boolean
+            code:
+              type: number
+            message:
+              type: string
+            data:
+              type: object
+              properties:
+                tests:
+                  type: object
+                  properties:
+                    orchestratorInit:
+                      type: boolean
+                    serversListed:
+                      type: boolean
+                    customServerRegistered:
+                      type: boolean
+                    sampleTaskCreated:
+                      type: boolean
+                    tasksListed:
+                      type: boolean
+                    mcpCallExecuted:
+                      type: boolean
+                results:
+                  type: object
+                  properties:
+                    serversCount:
+                      type: number
+                    tasksCount:
+                      type: number
+                    mcpCallResult:
+                      type: object
+                details:
+                  type: object
