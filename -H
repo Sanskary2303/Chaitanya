@@ -1,0 +1,7 @@
+--_curl_--
+cmdand quote>     "query": "execute command "ls -la data/""
+--_curl_--
+cmdand quote>     "sessionId": "test-session"
+--_curl_--
+cmdand quote>     "enableCommandExecution": true
+cmdand quote>   

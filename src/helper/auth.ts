@@ -1,5 +1,5 @@
-import jwt from 'jsonwebtoken';
-import bcrypt from 'bcryptjs';
+import * as jwt from 'jsonwebtoken';
+import * as bcrypt from 'bcryptjs';
 import { GSContext, GSStatus, logger } from '@godspeedsystems/core';
 
 // User interface for type safety
@@ -125,7 +125,8 @@ export function getUserByUsername(username: string): User | null {
  * Get user by ID
  */
 export function getUserById(id: string): User | null {
-  for (const user of users.values()) {
+  const userArray = Array.from(users.values());
+  for (const user of userArray) {
     if (user.id === id) {
       const { password: _, ...userWithoutPassword } = user;
       return userWithoutPassword as User;
@@ -222,6 +223,47 @@ export function requireAdmin(ctx: GSContext): GSStatus | null {
   }
 
   return null;
+}
+
+/**
+ * Validate email format
+ */
+export function validateEmail(email: string): { valid: boolean; message?: string } {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return {
+      valid: false,
+      message: 'Invalid email format'
+    };
+  }
+  return { valid: true };
+}
+
+/**
+ * Validate password strength
+ */
+export function validatePassword(password: string): { valid: boolean; message?: string } {
+  if (password.length < 8) {
+    return {
+      valid: false,
+      message: 'Password must be at least 8 characters long'
+    };
+  }
+  
+  // Check for at least one uppercase letter, lowercase letter, number, and special character
+  const hasUppercase = /[A-Z]/.test(password);
+  const hasLowercase = /[a-z]/.test(password);
+  const hasNumber = /\d/.test(password);
+  const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+  
+  if (!hasUppercase || !hasLowercase || !hasNumber || !hasSpecialChar) {
+    return {
+      valid: false,
+      message: 'Password must contain at least one uppercase letter, lowercase letter, number, and special character'
+    };
+  }
+  
+  return { valid: true };
 }
 
 /**

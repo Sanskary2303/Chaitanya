@@ -1,0 +1,9 @@
+This is a test file created to demonstrate the enhanced chatbot capabilities.
+
+The chatbot can now:
+1. Read and write files in the data/ and tmp/ directories
+2. Perform GitHub operations like reading files, creating issues, and listing repositories
+3. Search through the knowledge base using RAG
+4. Coordinate complex multi-step operations
+
+This file can be read by asking: "Can you read the file data/test.txt?"

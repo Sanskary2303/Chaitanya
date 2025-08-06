@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced MCP Tools Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; border-radius: 5px; }
+        .messages { height: 400px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; margin: 10px 0; }
+        input[type="text"] { width: 70%; padding: 8px; }
+        button { padding: 8px 15px; margin-left: 10px; }
+        .response { margin: 5px 0; padding: 5px; background: #f0f0f0; border-radius: 3px; }
+        .user { background: #e3f2fd; }
+        .assistant { background: #f1f8e9; }
+        .status { font-weight: bold; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>Enhanced MCP Tools Testing Interface</h1>
+    
+    <div class="status" id="status">Disconnected</div>
+    
+    <div class="test-section">
+        <h3>Test Streaming Enhanced Tools</h3>
+        <div class="messages" id="messages"></div>
+        <input type="text" id="messageInput" placeholder="Type your message here..." value="read file tmp/stream-test.txt">
+        <button onclick="sendMessage()">Send</button>
+        <button onclick="clearMessages()">Clear</button>
+        <button onclick="disconnect()">Disconnect</button>
+        <button onclick="connect()">Connect</button>
+    </div>
+
+    <div class="test-section">
+        <h3>Quick Test Buttons</h3>
+        <button onclick="testFileRead()">Test File Read</button>
+        <button onclick="testFileWrite()">Test File Write</button>
+        <button onclick="testFileList()">Test File List</button>
+        <button onclick="testGitHub()">Test GitHub</button>
+        <button onclick="testRAG()">Test RAG</button>
+    </div>
+
+    <script>
+        let ws = null;
+        let sessionId = 'streaming-test-' + Date.now();
+
+        function updateStatus(message) {
+            document.getElementById('status').textContent = message;
+        }
+
+        function addMessage(role, content) {
+            const messages = document.getElementById('messages');
+            const div = document.createElement('div');
+            div.className = 'response ' + role;
+            div.innerHTML = `<strong>${role.toUpperCase()}:</strong> ${content}`;
+            messages.appendChild(div);
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        function connect() {
+            if (ws && ws.readyState === WebSocket.OPEN) return;
+            
+            ws = new WebSocket('ws://localhost:8000');
+            
+            ws.onopen = function() {
+                updateStatus('Connected to WebSocket');
+                addMessage('system', 'Connected to enhanced MCP streaming service');
+            };
+            
+            ws.onmessage = function(event) {
+                try {
+                    const data = JSON.parse(event.data);
+                    if (data.eventtype === 'stream.chunk' && data.payload.message) {
+                        // Accumulate chunks for the current response
+                        if (!window.currentResponse) window.currentResponse = '';
+                        window.currentResponse += data.payload.message;
+                    } else if (data.eventtype === 'stream.end') {
+                        // Display complete response
+                        if (window.currentResponse) {
+                            addMessage('assistant', window.currentResponse);
+                            window.currentResponse = '';
+                        }
+                    }
+                } catch (e) {
+                    console.log('Raw message:', event.data);
+                    addMessage('system', 'Raw: ' + event.data.substring(0, 100));
+                }
+            };
+            
+            ws.onclose = function() {
+                updateStatus('Disconnected');
+                addMessage('system', 'WebSocket connection closed');
+            };
+            
+            ws.onerror = function(error) {
+                updateStatus('Error: ' + error);
+                addMessage('system', 'WebSocket error: ' + error);
+            };
+        }
+
+        function disconnect() {
+            if (ws) {
+                ws.close();
+                ws = null;
+            }
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            if (!message || !ws || ws.readyState !== WebSocket.OPEN) return;
+            
+            addMessage('user', message);
+            
+            ws.send(JSON.stringify({
+                type: 'stream',
+                message: message,
+                sessionId: sessionId
+            }));
+            
+            input.value = '';
+        }
+
+        function clearMessages() {
+            document.getElementById('messages').innerHTML = '';
+        }
+
+        // Quick test functions
+        function testFileRead() {
+            document.getElementById('messageInput').value = 'read file tmp/stream-test.txt';
+            sendMessage();
+        }
+
+        function testFileWrite() {
+            document.getElementById('messageInput').value = 'write file tmp/stream-tool-test.txt content: "Testing file operations through streaming interface"';
+            sendMessage();
+        }
+
+        function testFileList() {
+            document.getElementById('messageInput').value = 'list files in tmp/';
+            sendMessage();
+        }
+
+        function testGitHub() {
+            document.getElementById('messageInput').value = 'show my GitHub profile information';
+            sendMessage();
+        }
+
+        function testRAG() {
+            document.getElementById('messageInput').value = 'What information do you have about ROS Master setup?';
+            sendMessage();
+        }
+
+        // Auto-connect on page load
+        window.onload = function() {
+            connect();
+        };
+
+        // Handle Enter key
+        document.getElementById('messageInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>

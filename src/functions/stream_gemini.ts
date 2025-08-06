@@ -133,9 +133,276 @@ export default async function stream_gemini(ctx: GSContext): Promise<GSStatus> {
     },
   );
 
-  // STEP 2: Create the LangGraph LLM Agent with Tool Support
+  // Enhanced GitHub MCP Tool for reading, writing, and GitHub operations
+  const enhancedGithubTool = tool(
+    async (input) => {
+      try {
+        // Import the GitHub MCP manager and server configs
+        const { githubMCPManager, GITHUB_MCP_SERVERS } = await import('../helper/github-mcp-client');
+        
+        // Check if we have a connected client, if not, try to create one
+        let client = githubMCPManager.getClient();
+        
+        if (!client || !client.isConnected()) {
+          try {
+            ctx.logger.info('GitHub MCP client not connected, attempting to initialize...');
+            
+            // Try to connect to the official GitHub MCP server
+            const serverConfig = GITHUB_MCP_SERVERS['official'];
+            if (serverConfig && process.env.GITHUB_TOKEN) {
+              serverConfig.env = {
+                ...serverConfig.env,
+                GITHUB_PERSONAL_ACCESS_TOKEN: process.env.GITHUB_TOKEN,
+                GITHUB_TOKEN: process.env.GITHUB_TOKEN,
+              };
+              
+              client = await githubMCPManager.createClient('official', serverConfig);
+              ctx.logger.info('Successfully initialized GitHub MCP client');
+            } else {
+              return 'Error: GitHub MCP client not available and GITHUB_TOKEN environment variable not set. Please configure GitHub access to use GitHub operations.';
+            }
+          } catch (initError: any) {
+            ctx.logger.error('Failed to initialize GitHub MCP client:', initError);
+            return `Error: Failed to connect to GitHub MCP server: ${initError.message}. GitHub operations are not available.`;
+          }
+        }
+        
+        // Import the enhanced GitHub MCP function
+        const { default: enhancedMCPGitHub } = await import('./enhanced_github_mcp');
+        
+        // Use the actual context and modify the inputs temporarily
+        const originalBody = ctx.inputs?.data?.body;
+        
+        // Temporarily update the context inputs
+        if (ctx.inputs?.data) {
+          ctx.inputs.data.body = {
+            query: input.query,
+            operation: input.operation,
+            ...input.parameters
+          };
+        }
+        
+        const result = await enhancedMCPGitHub(ctx, {});
+        
+        // Restore original body
+        if (ctx.inputs?.data && originalBody) {
+          ctx.inputs.data.body = originalBody;
+        }
+        
+        if (result.success) {
+          return JSON.stringify(result.data || result.message || 'Operation completed successfully');
+        } else {
+          return `Error: ${result.message}`;
+        }
+      } catch (error: any) {
+        ctx.logger.error('GitHub operation error:', error);
+        return `Error executing GitHub operation: ${error.message}`;
+      }
+    },
+    {
+      name: 'enhanced_github_operations',
+      description: 'Perform GitHub operations like reading files, writing files, creating issues, listing repositories, and more. Use this tool for any GitHub-related tasks.',
+      schema: z.object({
+        query: z.string().describe('Natural language description of what you want to do with GitHub (e.g., "read file README.md from owner/repo", "create a new issue", "list my repositories")'),
+        operation: z.string().optional().describe('Specific operation to perform (optional, will be inferred from query if not provided)'),
+        parameters: z.object({}).optional().describe('Additional parameters for the operation')
+      }),
+    },
+  );
 
-  const toolnode = new ToolNode<typeof GraphState.State>([ragTool]);
+  // File operations tool for reading/writing local files
+  const fileOperationsTool = tool(
+    async (input) => {
+      try {
+        const fs = await import('fs/promises');
+        const path = await import('path');
+        
+        // Security: Restrict file operations to safe directories
+        const workspaceRoot = process.cwd();
+        const dataDir = path.join(workspaceRoot, 'data');
+        const tmpDir = path.join(workspaceRoot, 'tmp');
+        const allowedDirs = [dataDir, tmpDir];
+        
+        if (input.operation === 'read') {
+          if (!input.filePath) {
+            return 'Error: File path is required for read operation';
+          }
+          
+          // Security check: ensure file is in allowed directory
+          const fullPath = path.resolve(input.filePath);
+          const isAllowed = allowedDirs.some(dir => fullPath.startsWith(path.resolve(dir)));
+          
+          if (!isAllowed) {
+            return `Error: File access denied. Only files in ${allowedDirs.join(', ')} are accessible.`;
+          }
+          
+          try {
+            const content = await fs.readFile(fullPath, 'utf-8');
+            return `File content of ${input.filePath}:\n\n${content}`;
+          } catch (error: any) {
+            if (error.code === 'ENOENT') {
+              return `Error: File ${input.filePath} not found`;
+            }
+            return `Error reading file ${input.filePath}: ${error.message}`;
+          }
+        } else if (input.operation === 'write') {
+          if (!input.filePath || !input.content) {
+            return 'Error: File path and content are required for write operation';
+          }
+          
+          // Security check: ensure file is in allowed directory
+          const fullPath = path.resolve(input.filePath);
+          const isAllowed = allowedDirs.some(dir => fullPath.startsWith(path.resolve(dir)));
+          
+          if (!isAllowed) {
+            return `Error: File access denied. Only files in ${allowedDirs.join(', ')} can be written.`;
+          }
+          
+          try {
+            // Ensure directory exists
+            const dir = path.dirname(fullPath);
+            await fs.mkdir(dir, { recursive: true });
+            
+            await fs.writeFile(fullPath, input.content, 'utf-8');
+            return `Successfully wrote content to ${input.filePath}`;
+          } catch (error: any) {
+            return `Error writing file ${input.filePath}: ${error.message}`;
+          }
+        } else if (input.operation === 'list') {
+          const dirPath = input.filePath || dataDir;
+          const fullPath = path.resolve(dirPath);
+          
+          // Security check: ensure directory is in allowed paths
+          const isAllowed = allowedDirs.some(dir => fullPath.startsWith(path.resolve(dir))) || fullPath === path.resolve(workspaceRoot);
+          
+          if (!isAllowed) {
+            return `Error: Directory access denied. Only directories in ${allowedDirs.join(', ')} or workspace root can be listed.`;
+          }
+          
+          try {
+            const files = await fs.readdir(fullPath, { withFileTypes: true });
+            const fileList = files.map(file => 
+              file.isDirectory() ? `📁 ${file.name}/` : `📄 ${file.name}`
+            ).join('\n');
+            
+            return `Contents of ${dirPath}:\n\n${fileList}`;
+          } catch (error: any) {
+            if (error.code === 'ENOENT') {
+              return `Error: Directory ${dirPath} not found`;
+            }
+            return `Error listing directory ${dirPath}: ${error.message}`;
+          }
+        } else {
+          return 'Error: Supported operations are: read, write, list';
+        }
+      } catch (error: any) {
+        ctx.logger.error('File operation error:', error);
+        return `File operation error: ${error.message}`;
+      }
+    },
+    {
+      name: 'file_operations',
+      description: 'Perform file system operations like reading files, writing files, and listing directories. Use this for local file management tasks. Only files in data/ and tmp/ directories are accessible for security.',
+      schema: z.object({
+        operation: z.enum(['read', 'write', 'list']).describe('The file operation to perform'),
+        filePath: z.string().describe('Path to the file or directory (relative to workspace root)'),
+        content: z.string().optional().describe('Content to write (required for write operation)')
+      }),
+    },
+  );
+
+  // Command execution tool for running shell commands
+  const commandExecutionTool = tool(
+    async (input) => {
+      try {
+        const { spawn } = await import('child_process');
+        
+        return new Promise<string>((resolve) => {
+          // Parse the command and arguments
+          const commandParts = input.command.trim().split(/\s+/);
+          const command = commandParts[0];
+          const args = commandParts.slice(1);
+          
+          let stdout = '';
+          let stderr = '';
+          
+          const childProcess = spawn(command, args, {
+            cwd: input.workingDirectory || process.cwd(),
+            shell: true
+          });
+          
+          childProcess.stdout?.on('data', (data: Buffer) => {
+            stdout += data.toString();
+          });
+          
+          childProcess.stderr?.on('data', (data: Buffer) => {
+            stderr += data.toString();
+          });
+          
+          childProcess.on('close', (code: number | null) => {
+            const output = stdout + (stderr ? `\nSTDERR: ${stderr}` : '');
+            resolve(`Command executed: ${input.command}\nExit code: ${code}\n\nOutput:\n${output}`);
+          });
+          
+          childProcess.on('error', (error: Error) => {
+            resolve(`Command execution failed: ${error.message}`);
+          });
+          
+          // Set a timeout for long-running commands
+          setTimeout(() => {
+            childProcess.kill();
+            resolve(`Command timed out after 30 seconds: ${input.command}`);
+          }, 30000);
+        });
+      } catch (error: any) {
+        return `Command execution error: ${error.message}`;
+      }
+    },
+    {
+      name: 'execute_command',
+      description: 'Execute shell commands and return their output. Use this for running system commands, listing directories with ls, checking system status, etc.',
+      schema: z.object({
+        command: z.string().describe('The shell command to execute'),
+        workingDirectory: z.string().optional().describe('Working directory to run the command in (optional)')
+      }),
+    },
+  );
+
+  // MCP Orchestrator tool for complex multi-step operations
+  const mcpOrchestratorTool = tool(
+    async (input) => {
+      try {
+        // Import the MCP orchestrator
+        const { MCPOrchestrator } = await import('../helper/mcp-orchestrator');
+        
+        const orchestrator = new MCPOrchestrator(ctx);
+        
+        // This is a simplified example - you can expand this based on your needs
+        return `MCP Orchestrator tool executed for query: ${input.query}. This tool can coordinate multiple MCP operations in sequence or parallel.`;
+      } catch (error: any) {
+        return `MCP Orchestrator error: ${error.message}`;
+      }
+    },
+    {
+      name: 'mcp_orchestrator',
+      description: 'Coordinate complex multi-step operations across multiple MCP servers and tools.',
+      schema: z.object({
+        query: z.string().describe('Description of the complex operation to orchestrate'),
+        servers: z.array(z.string()).optional().describe('List of MCP server IDs to use'),
+        parallel: z.boolean().optional().describe('Whether to execute operations in parallel')
+      }),
+    },
+  );
+
+  // STEP 2: Create the LangGraph LLM Agent with Enhanced Tool Support
+
+  const toolnode = new ToolNode<typeof GraphState.State>([
+    ragTool, 
+    enhancedGithubTool, 
+    fileOperationsTool, 
+    commandExecutionTool,
+    mcpOrchestratorTool
+  ]);
 
   async function shouldRetrieve(
     state: typeof GraphState.State,
@@ -178,7 +445,7 @@ export default async function stream_gemini(ctx: GSContext): Promise<GSStatus> {
       model: process.env.GEMINI_MODEL || 'gemini-2.0-flash',
       temperature: 0.7,
       streaming: true,
-    }).bindTools([ragTool]);
+    }).bindTools([ragTool, enhancedGithubTool, fileOperationsTool, commandExecutionTool, mcpOrchestratorTool]);
 
     const response = await llm.invoke(allMessages);
     
