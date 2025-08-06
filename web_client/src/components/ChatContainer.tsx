@@ -296,9 +296,12 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
 
       // Add global test function for debugging
       (window as any).testLoadHistory = () => {
-        const testSessionId = 'cmdczwrk10001m6a8nsu8g7cj';
-        console.log('Testing with session ID:', testSessionId);
-        loadChatHistory(testSessionId);
+        if (currentSessionId) {
+          console.log('Testing with current session ID:', currentSessionId);
+          loadChatHistory(currentSessionId);
+        } else {
+          console.log('No current session ID available');
+        }
       };
 
       (window as any).testCreateNewSession = () => {

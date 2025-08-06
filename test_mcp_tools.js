@@ -1,22 +1,79 @@
-// Quick test script for MCP local tools
+const WebSocket = require('ws');
 
-async function testMCPTools() {
-  console.log('Testing MCP Local Tools...');
+const ws = new WebSocket('ws://localhost:8000');
+
+ws.on('open', function open() {
+  console.log('WebSocket connected for MCP testing');
   
-  // Test cases can be added here to verify tool functionality
-  console.log('✅ MCP tools are loaded and ready to use!');
-  console.log('Available tools:');
-  console.log('  - read-file: Read file contents with encoding support');
-  console.log('  - write-file: Write file contents with directory creation');
-  console.log('  - execute-command: Execute shell commands with safety checks');
-  console.log('  - list-directory: List directory contents with details');
-  console.log('  - get-file-info: Get file/directory metadata');
-  console.log('  - switch-mode: Switch between operational modes');
-  console.log('  - call-mcp: Call external MCP services');
-  console.log('');
-  console.log('Server is running at: http://localhost:3000');
-  console.log('API Documentation: http://localhost:3000/api-docs');
-  console.log('WebSocket Port: 8000');
-}
+  // Test 1: MCP Read File
+  console.log('\n--- Testing MCP Read File ---');
+  const readFileMessage = {
+    eventtype: 'mcp.read-file',
+    payload: {
+      filePath: 'package.json'
+    }
+  };
 
-testMCPTools();
+  console.log('Sending read file request:', JSON.stringify(readFileMessage, null, 2));
+  ws.send(JSON.stringify(readFileMessage));
+  
+  // Test 2: MCP List Directory (after a delay)
+  setTimeout(() => {
+    console.log('\n--- Testing MCP List Directory ---');
+    const listDirMessage = {
+      eventtype: 'mcp.list-directory',
+      payload: {
+        dirPath: '.',
+        includeHidden: false
+      }
+    };
+    
+    console.log('Sending list directory request:', JSON.stringify(listDirMessage, null, 2));
+    ws.send(JSON.stringify(listDirMessage));
+  }, 2000);
+  
+  // Test 3: MCP Execute Command (after another delay)
+  setTimeout(() => {
+    console.log('\n--- Testing MCP Execute Command ---');
+    const executeMessage = {
+      eventtype: 'mcp.execute-command',
+      payload: {
+        command: 'pwd'
+      }
+    };
+    
+    console.log('Sending execute command request:', JSON.stringify(executeMessage, null, 2));
+    ws.send(JSON.stringify(executeMessage));
+  }, 4000);
+  
+  // Test 4: MCP Switch Mode (after another delay)
+  setTimeout(() => {
+    console.log('\n--- Testing MCP Switch Mode ---');
+    const switchModeMessage = {
+      eventtype: 'mcp.switch-mode',
+      payload: {
+        mode: 'development'
+      }
+    };
+    
+    console.log('Sending switch mode request:', JSON.stringify(switchModeMessage, null, 2));
+    ws.send(JSON.stringify(switchModeMessage));
+  }, 6000);
+  
+  // Close connection after all tests
+  setTimeout(() => {
+    ws.close();
+  }, 8000);
+});
+
+ws.on('message', function message(data) {
+  console.log('Received response:', data.toString());
+});
+
+ws.on('error', function error(err) {
+  console.error('WebSocket error:', err);
+});
+
+ws.on('close', function close() {
+  console.log('WebSocket connection closed');
+});

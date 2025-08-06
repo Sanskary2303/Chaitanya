@@ -1,5 +1,5 @@
 websocket.stream:
-  fn: enhanced_mcp_chatbot
+  fn: stream_gemini
   schema:
     type: object
     required:

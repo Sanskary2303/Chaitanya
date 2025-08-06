@@ -1,0 +1,26 @@
+http:
+  get:
+    route: /active-prompt
+    summary: Get active system prompt
+    description: Get the currently active system prompt for use in the chatbot
+    fn: prompt_management.get_active_prompt
+    params:
+      - name: promptId
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Specific prompt ID to use (overrides default)
+      - name: promptName
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Specific prompt name to use (overrides default)
+    responses:
+      200:
+        description: Active system prompt
+      404:
+        description: No active prompt found
+      500:
+        description: Internal server error

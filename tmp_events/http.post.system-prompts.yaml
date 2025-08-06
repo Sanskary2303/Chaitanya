@@ -1,0 +1,49 @@
+http:
+  post:
+    route: /system-prompts
+    summary: Create a new system prompt
+    description: Create a new system prompt with specified parameters
+    fn: prompt_management.create_system_prompt
+    body:
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - name
+              - coreSystemPrompt
+              - toolKnowledgePrompt
+            properties:
+              name:
+                type: string
+                description: Name of the system prompt
+              description:
+                type: string
+                description: Description of the prompt
+              coreSystemPrompt:
+                type: string
+                description: Main system prompt content
+              toolKnowledgePrompt:
+                type: string
+                description: Tool-specific knowledge content
+              category:
+                type: string
+                description: Category for organization
+              tags:
+                type: array
+                items:
+                  type: string
+                description: Tags for the prompt
+              version:
+                type: string
+                description: Version of the prompt
+              metadata:
+                type: object
+                description: Additional metadata
+    responses:
+      201:
+        description: System prompt created successfully
+      400:
+        description: Invalid input data
+      500:
+        description: Internal server error

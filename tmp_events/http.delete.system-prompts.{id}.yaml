@@ -1,0 +1,24 @@
+http:
+  delete:
+    tags:
+      - System Prompt
+    route: /system-prompts/{id}
+    summary: Delete system prompt
+    description: Delete a system prompt (cannot delete default prompt)
+    fn: prompt_management.delete_system_prompt
+    params:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: ID of the prompt to delete
+    responses:
+      200:
+        description: System prompt deleted successfully
+      400:
+        description: Cannot delete default prompt
+      404:
+        description: Prompt not found
+      500:
+        description: Internal server error

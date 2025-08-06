@@ -96,8 +96,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
           variant="outline"
           size="sm"
           onClick={() => {
-            const testSessionId = 'cmdczwrk10001m6a8nsu8g7cj';
-            console.log('Loading test session:', testSessionId);
+            console.log('Loading test session for current session');
             (window as any).testLoadHistory && (window as any).testLoadHistory();
           }}
           className="hidden sm:flex items-center space-x-2 bg-yellow-50"

@@ -1,0 +1,20 @@
+http:
+  get:
+    route: /system-prompts/{id}
+    summary: Get system prompt by ID
+    description: Retrieve a specific system prompt by its ID
+    fn: prompt_management.list_system_prompts
+    params:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: ID of the prompt to retrieve
+    responses:
+      200:
+        description: System prompt found
+      404:
+        description: Prompt not found
+      500:
+        description: Internal server error

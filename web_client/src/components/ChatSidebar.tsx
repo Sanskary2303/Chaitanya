@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Card } from '@/components/ui/card';
@@ -33,9 +34,15 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
   isCollapsed,
   onToggleCollapse,
 }) => {
+  const { token } = useAuth();
   const [sessions, setSessions] = useState<ChatSession[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Helper function to get auth headers
+  const getAuthHeaders = () => ({
+    ...(token && { 'Authorization': `Bearer ${token}` })
+  });
 
   // Load all chat sessions
   const loadChatSessions = async () => {
@@ -44,29 +51,28 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
     try {
       console.log('Loading chat sessions...');
       
-      // Start with empty array to avoid duplicates
-      const existingSessionId = localStorage.getItem('currentSessionId');
-      const mockSessions: ChatSession[] = [];
+      // Fetch real sessions from the API
+      const response = await axios.get(`${API_URL}/chat-sessions`, {
+        headers: getAuthHeaders()
+      });
       
-      // Only add test session if it's different from current session
-      if (existingSessionId !== 'cmdczwrk10001m6a8nsu8g7cj') {
-        mockSessions.push({
-          id: 'cmdczwrk10001m6a8nsu8g7cj',
-          title: 'Test Chat Session',
-          createdAt: '2025-07-22T16:00:39.000Z',
-          updatedAt: '2025-07-22T16:00:39.000Z',
-          isActive: true,
-          metadata: {}
-        });
+      let fetchedSessions: ChatSession[] = [];
+      
+      if (response.data.success && response.data.data) {
+        fetchedSessions = response.data.data;
+      } else if (Array.isArray(response.data)) {
+        fetchedSessions = response.data;
       }
       
-      console.log('Loaded sessions:', mockSessions);
-      setSessions(mockSessions.sort((a: ChatSession, b: ChatSession) => 
+      console.log('Loaded sessions:', fetchedSessions);
+      setSessions(fetchedSessions.sort((a: ChatSession, b: ChatSession) => 
         new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
       ));
     } catch (error: any) {
       console.error('Error loading chat sessions:', error);
       setError('Failed to load chat sessions');
+      // Fallback to empty array on error
+      setSessions([]);
     } finally {
       setIsLoading(false);
     }

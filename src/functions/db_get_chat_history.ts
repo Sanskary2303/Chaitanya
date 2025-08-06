@@ -26,25 +26,11 @@ export default async function get_chat_history(ctx: GSContext): Promise<any> {
       }
     });
 
-    logger.info(`Retrieved ${messages.data?.length || 0} messages for session ${params.sessionId}`);
+    logger.info(`Retrieved ${messages?.length || 0} messages for session ${params.sessionId}`);
     
-    // Return the complete response object directly to match schema
-    const response = {
-      success: true,
-      code: 200,
-      message: 'Chat history retrieved',
-      data: messages.data || []
-    };
-    
-    logger.debug('Returning response:', JSON.stringify(response));
-    return response;
+    return new GSStatus(true, 200, 'Chat history retrieved', messages);
   } catch (error) {
     logger.error('Error getting chat history:', error);
-    return {
-      success: false,
-      code: 500,
-      message: 'Failed to get chat history',
-      data: []
-    };
+    return new GSStatus(false, 500, 'Failed to get chat history', null, { error: error instanceof Error ? error.message : 'Unknown error' });
   }
 }
